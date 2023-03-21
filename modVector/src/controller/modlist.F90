@@ -117,7 +117,7 @@ contains
     logical :: is_removed
 
     is_removed = .false.
-    if (self%data%x == data_to_remove%x) then
+    if (self%data%index_value == data_to_remove%index_value) then
       is_removed = .true.
       self => next(self)  ! could be null or other
       return
@@ -127,8 +127,8 @@ contains
     node_before => self
     node_curr => next(self)
     do 
-      if (node_curr%data%x == data_to_remove%x) then
-        ! print *, 'data removed = ', data_to_remove%x
+      if (node_curr%data%index_value == data_to_remove%index_value) then
+        ! print *, 'data removed = ', data_to_remove%index_value
         node_before%next => next(node_curr)
         is_removed = .true.
         return

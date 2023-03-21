@@ -53,12 +53,12 @@ program Modular_tests
       !
       call cpu_time(time_initial)
       allocate(dat_a)
-      dat_a%x = 1
+      dat_a%index_value = 1
       call init(ll, dat_a)
       deallocate(dat_a)
       do an_integer = 2, p_num_of_insertions
         allocate(dat_a)
-        dat_a%x = an_integer
+        dat_a%index_value = an_integer
         call insert(ll, DATA=dat_a)
         deallocate(dat_a)
       enddo
@@ -75,9 +75,9 @@ program Modular_tests
 
       ! check HEAD
       dat_a = get(ll)
-      print*, 'Checking head element ...', dat_a%x
-      if(dat_a%x /= p_num_of_insertions) then
-        print *, 'Head element should be: ', p_num_of_insertions, ' but was', dat_a%x
+      print*, 'Checking head element ...', dat_a%index_value
+      if(dat_a%index_value /= p_num_of_insertions) then
+        print *, 'Head element should be: ', p_num_of_insertions, ' but was', dat_a%index_value
         test_result = .false.
         call free_memory(ll)
         return
@@ -95,9 +95,9 @@ program Modular_tests
       call cpu_time(time_final)
 
 
-      print*, 'Checking last element ...', dat_a%x
-      if (dat_a%x /= 1) then
-        print *, 'Last element should be 1 but was', dat_a%x
+      print*, 'Checking last element ...', dat_a%index_value
+      if (dat_a%index_value /= 1) then
+        print *, 'Last element should be 1 but was', dat_a%index_value
         test_result = .false.
         call free_memory(ll)
         return
@@ -138,10 +138,10 @@ program Modular_tests
       list_size = p_num_of_insertions
 
       ! Insert values
-      dat_a%x = 1
+      dat_a%index_value = 1
       call init(ll, dat_a)
       do an_integer = 2, p_num_of_insertions
-        dat_a%x = an_integer
+        dat_a%index_value = an_integer
         call insert(ll, DATA=dat_a)
       enddo
 
@@ -151,8 +151,8 @@ program Modular_tests
       do an_integer = 1, p_num_of_deletions
         list_pointer => next(ll)
         ! removes using a step
-        data_to_remove%x = an_integer * (p_num_of_insertions/p_num_of_deletions) - an_integer
-        ! print *, 'removing ', data_to_remove%x
+        data_to_remove%index_value = an_integer * (p_num_of_insertions/p_num_of_deletions) - an_integer
+        ! print *, 'removing ', data_to_remove%index_value
         is_removed = remove(list_pointer, data_to_remove)
         if(is_removed) list_size = list_size -1
       enddo
@@ -189,7 +189,7 @@ program Modular_tests
       call cpu_time(time_initial)
       call init(vec, p_num_of_insertions)
       do an_integer = 1, p_num_of_insertions
-        dat_a%x = an_integer
+        dat_a%index_value = an_integer
         call insert(vec, DATA=dat_a)
       enddo
       call cpu_time(time_final)
@@ -206,9 +206,9 @@ program Modular_tests
 
       data_index=1
       dat_a = get(vec,data_index)
-      print*, 'Checking Head element ...', dat_a%x
-      if (dat_a%x /= 1) then
-        print *, 'Head element should be 1 but was', dat_a%x
+      print*, 'Checking Head element ...', dat_a%index_value
+      if (dat_a%index_value /= 1) then
+        print *, 'Head element should be 1 but was', dat_a%index_value
         test_result = .false.
         call free_memory(vec)
         return
@@ -216,9 +216,9 @@ program Modular_tests
 
       data_index=p_num_of_insertions
       dat_a = get(vec,data_index)
-      print*, 'Checking last element ...', dat_a%x
-      if(dat_a%x /= p_num_of_insertions) then
-        print *, 'Last element should be: ', p_num_of_insertions, ' but was', dat_a%x
+      print*, 'Checking last element ...', dat_a%index_value
+      if(dat_a%index_value /= p_num_of_insertions) then
+        print *, 'Last element should be: ', p_num_of_insertions, ' but was', dat_a%index_value
         test_result = .false.
         call free_memory(vec)
         return
@@ -260,19 +260,19 @@ program Modular_tests
       print*, ">>>>> Running Test vector random remove Performance"
       test_result = .true.
       ! Insert values
-      dat_a%x = 1
+      dat_a%index_value = 1
       call init(vec, p_num_of_insertions)
       do an_integer = 1, p_num_of_insertions
         call insert(vec, DATA=dat_a)
-        dat_a%x = an_integer+1
+        dat_a%index_value = an_integer+1
       enddo
       call print_all(vec)
       print *, "removing ", p_num_of_deletions, " elements of vector of size ", p_num_of_insertions
       call cpu_time(time_initial)
       do an_integer = 1, p_num_of_deletions
         ! removes using a step
-        data_to_remove%x = an_integer * (p_num_of_insertions/p_num_of_deletions) - an_integer
-        ! print*, 'removing ', data_to_remove%x
+        data_to_remove%index_value = an_integer * (p_num_of_insertions/p_num_of_deletions) - an_integer
+        ! print*, 'removing ', data_to_remove%index_value
         dummy = remove(vec, data_to_remove)
       enddo
       call cpu_time(time_final)

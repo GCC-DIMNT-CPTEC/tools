@@ -5,18 +5,8 @@ module ModVector
 
   private
 
-  public :: vector_t
-  public :: init
-  public :: free_memory
-  public :: get_size
-  public :: get_num_elements
-  public :: insert
-  public :: vector_put
-  public :: get
-  public :: remove
-  public :: print_all
-  
-
+  character(len=*), parameter   :: p_source_name = 'modVector.F90'
+   
   ! Vector data type
   type :: vector_t
     private
@@ -25,7 +15,61 @@ module ModVector
     
   end type vector_t
 
+  type(vector_t), allocatable :: instance
+
+  public :: get_instance
+  public :: vector_t
+  public :: init
+  public :: free_memory
+  public :: get_size
+  public :: get_num_elements
+  public :: insert
+  public :: vector_put
+  public :: get
+  public :: get_index_value
+  public :: remove
+  public :: print_all
+ ! public :: data_t
+  public :: insert_range
+
+  
 contains
+
+
+   function get_instance() result(self)
+    type(vector_t) :: self
+
+    if (.not. allocated(instance)) then
+      allocate(instance)
+    endif 
+    self = instance
+   end function get_instance
+  
+
+   subroutine insert_range(self, start_val, end_val)
+      implicit none
+      
+      type(vector_t), intent(inout) :: self
+      integer, intent(in)           :: start_val
+      integer, intent(in)           :: end_val
+      integer                       :: i, vector_ind
+      character(len=*), parameter   :: p_procedure_name = 'insert_range' 
+      
+      if (end_val < start_val) then
+         print*, p_procedure_name, "Erro: end_val", end_val, " menor que start_val", start_val 
+         stop
+      endif
+            
+      vector_ind=0      
+      do i = start_val, end_val
+         vector_ind=vector_ind+1
+         self%vector(vector_ind)%index_value=i
+      enddo
+      self%num_elements = vector_ind
+      
+  
+   end subroutine insert_range
+
 
 
   ! Initialize vector
@@ -94,6 +138,13 @@ contains
     type(data_t) :: data
     data = self%vector(data_index)
   end function get
+  
+  function get_index_value(self, data_index) result(data)
+    type(vector_t), intent(inout) :: self
+    integer, intent(in) :: data_index
+    integer :: data
+    data = self%vector(data_index)%index_value
+  end function get_index_value
 
   subroutine print_all(self) 
     type(vector_t), intent(inout) :: self
@@ -101,13 +152,13 @@ contains
     integer, parameter :: views = 5
     write(*, '(A8)', advance='NO') 'vector = ('
     do data_index = 1, min(self%num_elements, views)
-      write(*,'(i8, "," )',advance='NO')  self%vector(data_index)%x
+      write(*,'(i8, "," )',advance='NO')  self%vector(data_index)%index_value
     end do
     if (self%num_elements > views) then
       ! print last elements 
       write(*,'(A5)',advance='NO') ' ... '
       do data_index = max(self%num_elements - views, views +1 ), self%num_elements
-        write(*,'(i8, "," )',advance='NO')  self%vector(data_index)%x
+        write(*,'(i8, "," )',advance='NO')  self%vector(data_index)%index_value
       end do
     endif
     write(*, '(A2)', advance='YES') ' )'
@@ -128,7 +179,7 @@ contains
     endif
 
     do index = 1, self%num_elements
-      if (self%vector(index)%x == data_to_remove%x) then
+      if (self%vector(index)%index_value == data_to_remove%index_value) then
         self%vector(index:self%num_elements-1) = self%vector(index+1:self%num_elements)  ! Bidu
         self%num_elements = self%num_elements -1
         is_removed = .true.
@@ -136,8 +187,6 @@ contains
     enddo
 
   end function remove
-
-
 
 
 end module ModVector

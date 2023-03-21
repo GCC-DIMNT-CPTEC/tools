@@ -4,7 +4,7 @@
 
 # Compiler settings - Can be customized.
 CC = gfortran
-DEBUG_FLAGS= -g -O0 -J obj -Wall -fcheck=all
+DEBUG_FLAGS= -g -O0 -J obj -Wall -fcheck=all -ffree-line-length-none
 FFLAGS?=${DEBUG_FLAGS}
 LDFLAGS = 
 
