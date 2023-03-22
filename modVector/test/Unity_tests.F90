@@ -16,10 +16,6 @@ program Unity_tests
   test_errors_sum = test_errors_sum + test_list_removes()
   
   test_errors_sum = test_errors_sum + test_vector_init()
-  test_errors_sum = test_errors_sum + test_vector_init_singleton()
-  test_errors_sum = test_errors_sum + test_vector_init_singleton_interface()
-
-
   test_errors_sum = test_errors_sum + test_vector_inserts()
   test_errors_sum = test_errors_sum + test_vector_removes()
   
@@ -65,7 +61,7 @@ program Unity_tests
       call free_memory(ll)
       return
 
-    end function
+    end function test_list_init
 
 
     integer function test_list_inserts() result(test_error)
@@ -113,7 +109,8 @@ program Unity_tests
       ! Free the list
       call free_memory(ll)
 
-    end function
+    end function test_list_inserts
+
 
     integer function test_list_removes() result(test_error)
       use Modlist
@@ -218,7 +215,8 @@ program Unity_tests
         return
       endif
 
-    end function
+    end function test_list_removes
+
 
     ! Vector Tests ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     !
@@ -226,51 +224,49 @@ program Unity_tests
       use ModVector
       implicit none 
 
-      type(vector_t) :: vec
       integer, parameter :: p_vector_size = 1000000
 
       print*, ""
-      print*, ">>>>> Running Test Vector Initilize"
+      print*, ">>>>> Running Test Vector Initilize SINGLETON INTERFACE"
       test_error = 0
 
-
+      call init_instance()
       print *, 'Testing get_size = 0'
-      if(get_size(vec) /= 0) then
-        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: 0 but was', get_size(vec)
+      if(get_size() /= 0) then
+        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: 0 but was', get_size()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
       print *, 'Initializing Vector with size = ', p_vector_size
-      call init(vec, p_vector_size)
+      call init(p_vector_size)
 
       print *, 'Testing get_size = ', p_vector_size
-      if(get_size(vec) /= p_vector_size) then
-        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: ', p_vector_size,' but was', get_size(vec)
+      if(get_size() /= p_vector_size) then
+        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: ', p_vector_size,' but was', get_size()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
       print *, 'Testing num_elements = 0'
-      if(get_num_elements(vec) /= 0) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 0 but was', get_num_elements(vec)
+      if(get_num_elements() /= 0) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 0 but was', get_num_elements()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
-      call free_memory(vec)
+      call free_memory()
 
-    end function
+    end function test_vector_init
 
 
     integer function test_vector_inserts() result(test_error)
       use ModVector
       implicit none 
 
-      type(vector_t) :: vec
       type(data_t) :: dat_to_insert
       type(data_t) :: dat_test
       integer, parameter :: p_vector_size = 1000000
@@ -279,52 +275,53 @@ program Unity_tests
       print*, ">>>>> Running Test Vector Insert elements"
       test_error = 0
 
+      call init_instance()
       print *, 'Initializing Vector with size = ', p_vector_size
-      call init(vec, p_vector_size)
+      call init(p_vector_size)
 
       dat_to_insert%index_value = 10
       print *, 'Inserting vector element with: ', dat_to_insert%index_value
-      call insert(vec, dat_to_insert)
+      call insert(dat_to_insert)
 
       print *, 'Testing num_elements = 1'
-      if(get_num_elements(vec) /= 1) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 1 but was', get_num_elements(vec)
+      if(get_num_elements() /= 1) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 1 but was', get_num_elements()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
       print *, 'Testing first element'
-      dat_test = get(vec, get_num_elements(vec))
+      dat_test = get(get_num_elements())
       if(dat_test%index_value /= 10) then
         print *, '!!!!! TEST FAILED !!!!! First element should be: 10 but was', dat_test%index_value
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
       dat_to_insert%index_value = 20
       print *, 'Inserting vector element with: ', dat_to_insert%index_value
-      call insert(vec, dat_to_insert)
+      call insert(dat_to_insert)
 
       print *, 'Testing num_elements = 2'
-      if(get_num_elements(vec) /= 2) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 2 but was', get_num_elements(vec)
+      if(get_num_elements() /= 2) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 2 but was', get_num_elements()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
       print *, 'Testing second element'
-      dat_test = get(vec, get_num_elements(vec))
+      dat_test = get(get_num_elements())
       if(dat_test%index_value /= 20) then
         print *, '!!!!! TEST FAILED !!!!! First element should be: 20 but was', dat_test%index_value
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
-      call free_memory(vec)
+      call free_memory()
 
     end function test_vector_inserts
 
@@ -333,7 +330,6 @@ program Unity_tests
       use ModVector
       implicit none 
 
-      type(vector_t) :: vec
       type(data_t) :: dat_to_insert, dat_to_remove
       type(data_t) :: dat_test
       integer, parameter :: p_vector_size = 1000000
@@ -344,40 +340,41 @@ program Unity_tests
       print*, ">>>>> Running Test Vector Removes elements"
       test_error = 0
 
+      call init_instance()
       print *, 'Initializing Vector with size = ', p_vector_size
-      call init(vec, p_vector_size)
+      call init(p_vector_size)
 
       dat_to_insert%index_value = 10
       print *, 'Insertting elements in vector:' 
-      call insert(vec, dat_to_insert)
+      call insert(dat_to_insert)
       dat_to_insert%index_value = 20
-      call insert(vec, dat_to_insert)
+      call insert(dat_to_insert)
       dat_to_insert%index_value = 30
-      call insert(vec, dat_to_insert)
+      call insert(dat_to_insert)
       dat_to_insert%index_value = 40
-      call insert(vec, dat_to_insert)
-      call print_all(vec)
+      call insert(dat_to_insert)
+      call print_all()
 
       print *, 'Testing remove last '
       dat_to_remove%index_value = 40
-      dummy = remove(vec, dat_to_remove)
+      dummy = remove(dat_to_remove)
       num_elements_test = 3
       print *, 'Testing num_elements = ', num_elements_test
-      if(get_num_elements(vec) /= num_elements_test) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: ', num_elements_test, ' but was ', get_num_elements(vec)
+      if(get_num_elements() /= num_elements_test) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: ', num_elements_test, ' but was ', get_num_elements()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
       print *, 'Testing elements'
-      call print_all(vec)
+      call print_all()
       test_value = 10
       do index_element = 1, 3
-        dat_test = get(vec, index_element)
+        dat_test = get(index_element)
         if(dat_test%index_value /= test_value) then
           print *, '!!!!! TEST FAILED !!!!! element index', index_element, ' should be: ', test_value, ' but was', dat_test%index_value
           test_error = 1
-          call free_memory(vec)
+          call free_memory()
           return
         endif
         test_value = test_value + 10
@@ -385,161 +382,59 @@ program Unity_tests
 
       print *, 'Testing remove index 2'
       dat_to_remove%index_value = 20
-      dummy = remove(vec, dat_to_remove)
+      dummy = remove(dat_to_remove)
       num_elements_test = 2
       print *, 'Testing num_elements = ', num_elements_test
-      if(get_num_elements(vec) /= num_elements_test) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: ', num_elements_test, ' but was ', get_num_elements(vec)
+      if(get_num_elements() /= num_elements_test) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: ', num_elements_test, ' but was ', get_num_elements()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
       print *, 'Testing elements'
-      call print_all(vec)
+      call print_all()
       test_value = 10
-      dat_test = get(vec, 1)
+      dat_test = get(1)
       if(dat_test%index_value /= test_value) then
         print *, '!!!!! TEST FAILED !!!!! First element should be: ', test_value, ' but was', dat_test%index_value
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
       test_value = 30
-      dat_test = get(vec, 2)
+      dat_test = get(2)
       if(dat_test%index_value /= test_value) then
         print *, '!!!!! TEST FAILED !!!!! First element should be: ', test_value, ' but was', dat_test%index_value
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
       print *, 'Testing remove index 1'
       dat_to_remove%index_value = 10
-      dummy = remove(vec, dat_to_remove)
+      dummy = remove(dat_to_remove)
       num_elements_test = 1
       print *, 'Testing num_elements = ', num_elements_test
-      if(get_num_elements(vec) /= num_elements_test) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: ', num_elements_test, ' but was ', get_num_elements(vec)
+      if(get_num_elements() /= num_elements_test) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: ', num_elements_test, ' but was ', get_num_elements()
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
       print *, 'Testing elements'
-      call print_all(vec)
+      call print_all()
       test_value = 30
-      dat_test = get(vec, 1)
+      dat_test = get(1)
       if(dat_test%index_value /= test_value) then
         print *, '!!!!! TEST FAILED !!!!! First element should be: ', test_value, ' but was', dat_test%index_value
         test_error = 1
-        call free_memory(vec)
+        call free_memory()
         return
       endif
 
-      call free_memory(vec)
+      call free_memory()
 
     end function test_vector_removes
-
-
-  
-  
-  
-  ! Test vector singleton and interface below
-  !
-
-
-  integer function test_vector_init_singleton() result(test_error)
-      use ModVector
-      implicit none 
-
-      type(vector_t) :: vec
-      integer, parameter :: p_vector_size = 1000000
-
-      print*, ""
-      print*, ">>>>> Running Test Vector Initilize SINGLETON"
-      test_error = 0
-
-      vec = get_instance()
-
-      print *, 'Testing get_size = 0'
-      if(get_size(vec) /= 0) then
-        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: 0 but was', get_size(vec)
-        test_error = 1
-        call free_memory(vec)
-        return
-      endif
-
-      print *, 'Initializing Vector with size = ', p_vector_size
-      call init(vec, p_vector_size)
-
-      print *, 'Testing get_size = ', p_vector_size
-      if(get_size(vec) /= p_vector_size) then
-        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: ', p_vector_size,' but was', get_size(vec)
-        test_error = 1
-        call free_memory(vec)
-        return
-      endif
-
-      print *, 'Testing num_elements = 0'
-      if(get_num_elements(vec) /= 0) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 0 but was', get_num_elements(vec)
-        test_error = 1
-        call free_memory(vec)
-        return
-      endif
-
-      call free_memory(vec)
-
-    end function
-
-
-
-    integer function test_vector_init_singleton_interface() result(test_error)
-      use ModVector
-      implicit none 
-
-      integer, parameter :: p_vector_size = 1000000
-
-      print*, ""
-      print*, ">>>>> Running Test Vector Initilize SINGLETON INTERFACE"
-      test_error = 0
-
-      print *, 'Testing get_size = 0'
-      if(instance_get_size() /= 0) then
-        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: 0 but was', instance_get_size()
-        test_error = 1
-        call instance_free_memory()
-        return
-      endif
-
-      print *, 'Initializing Vector with size = ', p_vector_size
-      call instance_init(p_vector_size)
-
-      print *, 'Testing get_size = ', p_vector_size
-      if(instance_get_size() /= p_vector_size) then
-        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: ', p_vector_size,' but was', instance_get_size()
-        test_error = 1
-        call instance_free_memory()
-        return
-      endif
-
-      print *, 'Testing num_elements = 0'
-      if(instance_get_num_elements() /= 0) then
-        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 0 but was', instance_get_num_elements()
-        test_error = 1
-        call instance_free_memory()
-        return
-      endif
-
-      call instance_free_memory()
-
-    end function
-
-
-
-
-
-
-
 
 
 end program Unity_tests
