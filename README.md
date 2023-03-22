@@ -1,2 +1,2 @@
 # fortran_data_sctructures
-Generic utilities, like data structures (linked list, vector implementations)
+Just some tests on vector and linke list (to be merged in fortran_data_structures repository)
