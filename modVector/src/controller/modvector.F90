@@ -33,6 +33,11 @@ module ModVector
   public :: insert_range
 
   
+  public :: instance_init
+  public :: instance_free_memory
+  public :: instance_get_size
+  public :: instance_get_num_elements
+
 contains
 
 
@@ -109,9 +114,7 @@ contains
     num_elements = self%num_elements
   end function get_num_elements
 
-  ! ToDo ....
-
-  ! Insert a value at end of the vector
+    ! Insert a value at end of the vector
   subroutine insert(self, data)
     type(vector_t), intent(inout) :: self
     type(data_t), intent(in) :: data
@@ -188,5 +191,42 @@ contains
 
   end function remove
 
+
+
+  ! Singleton Instance interface methods
+
+  ! Initialize vector
+  subroutine instance_init(vec_max_size)
+    implicit none 
+    integer, intent(in) :: vec_max_size
+    type(vector_t) :: dummy_vector
+
+    dummy_vector = get_instance()
+    instance%num_elements = 0
+    allocate(instance%vector(vec_max_size))
+  end subroutine instance_init
+
+
+  ! Free the entire list and all data, beginning at SELF
+  subroutine instance_free_memory()
+    if(allocated(instance%vector)) deallocate(instance%vector)
+    instance%num_elements = 0
+  end subroutine instance_free_memory
+
+
+  function instance_get_size() result(size_vec)
+    integer :: size_vec
+    if(allocated(instance%vector)) then
+      size_vec = size(instance%vector)
+    else
+      size_vec = 0
+    endif
+  end function instance_get_size
+
+
+  function instance_get_num_elements() result(num_elements)
+    integer :: num_elements
+    num_elements = instance%num_elements
+  end function instance_get_num_elements
 
 end module ModVector

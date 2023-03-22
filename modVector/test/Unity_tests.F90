@@ -14,7 +14,12 @@ program Unity_tests
   test_errors_sum = test_errors_sum + test_list_init()
   test_errors_sum = test_errors_sum + test_list_inserts()
   test_errors_sum = test_errors_sum + test_list_removes()
+  
   test_errors_sum = test_errors_sum + test_vector_init()
+  test_errors_sum = test_errors_sum + test_vector_init_singleton()
+  test_errors_sum = test_errors_sum + test_vector_init_singleton_interface()
+
+
   test_errors_sum = test_errors_sum + test_vector_inserts()
   test_errors_sum = test_errors_sum + test_vector_removes()
   
@@ -228,7 +233,6 @@ program Unity_tests
       print*, ">>>>> Running Test Vector Initilize"
       test_error = 0
 
-      vec = get_instance()
 
       print *, 'Testing get_size = 0'
       if(get_size(vec) /= 0) then
@@ -434,5 +438,108 @@ program Unity_tests
       call free_memory(vec)
 
     end function test_vector_removes
+
+
+  
+  
+  
+  ! Test vector singleton and interface below
+  !
+
+
+  integer function test_vector_init_singleton() result(test_error)
+      use ModVector
+      implicit none 
+
+      type(vector_t) :: vec
+      integer, parameter :: p_vector_size = 1000000
+
+      print*, ""
+      print*, ">>>>> Running Test Vector Initilize SINGLETON"
+      test_error = 0
+
+      vec = get_instance()
+
+      print *, 'Testing get_size = 0'
+      if(get_size(vec) /= 0) then
+        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: 0 but was', get_size(vec)
+        test_error = 1
+        call free_memory(vec)
+        return
+      endif
+
+      print *, 'Initializing Vector with size = ', p_vector_size
+      call init(vec, p_vector_size)
+
+      print *, 'Testing get_size = ', p_vector_size
+      if(get_size(vec) /= p_vector_size) then
+        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: ', p_vector_size,' but was', get_size(vec)
+        test_error = 1
+        call free_memory(vec)
+        return
+      endif
+
+      print *, 'Testing num_elements = 0'
+      if(get_num_elements(vec) /= 0) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 0 but was', get_num_elements(vec)
+        test_error = 1
+        call free_memory(vec)
+        return
+      endif
+
+      call free_memory(vec)
+
+    end function
+
+
+
+    integer function test_vector_init_singleton_interface() result(test_error)
+      use ModVector
+      implicit none 
+
+      integer, parameter :: p_vector_size = 1000000
+
+      print*, ""
+      print*, ">>>>> Running Test Vector Initilize SINGLETON INTERFACE"
+      test_error = 0
+
+      print *, 'Testing get_size = 0'
+      if(instance_get_size() /= 0) then
+        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: 0 but was', instance_get_size()
+        test_error = 1
+        call instance_free_memory()
+        return
+      endif
+
+      print *, 'Initializing Vector with size = ', p_vector_size
+      call instance_init(p_vector_size)
+
+      print *, 'Testing get_size = ', p_vector_size
+      if(instance_get_size() /= p_vector_size) then
+        print *, '!!!!! TEST FAILED !!!!! Size of vector should be: ', p_vector_size,' but was', instance_get_size()
+        test_error = 1
+        call instance_free_memory()
+        return
+      endif
+
+      print *, 'Testing num_elements = 0'
+      if(instance_get_num_elements() /= 0) then
+        print *, '!!!!! TEST FAILED !!!!! Num elements should be: 0 but was', instance_get_num_elements()
+        test_error = 1
+        call instance_free_memory()
+        return
+      endif
+
+      call instance_free_memory()
+
+    end function
+
+
+
+
+
+
+
+
 
 end program Unity_tests
