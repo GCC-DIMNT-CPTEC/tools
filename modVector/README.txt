@@ -6,3 +6,4 @@ uso:
 make
 make run
 
+TODO: movwe separar modVector/src/controller/modlist.F90 em outra pasta irmã de modVector
