@@ -1,14 +1,15 @@
-Daycli_encoder
+MPAS_NC2GRIB2
 ==========
 
-The DAYCLI_ENCODER is a software written  in FORTRAN 90  to assist in the generation of the new DAYCLI message.
-This software was designed to encode DAYCLI message in FM94-BUFR using the template 3-07-075 from a specific text format.
-
+The MPAS_NC2GRIB2 is a software to read MONAN dataout in NETCDF format write in in FM92-GRIB (Version2)
 
 Compilation Instructions
 ==========
-See https://github.com/sergioh-pessoal/daycli_encoder/wiki/Building
+ (1) - compilation at egeon
+  	 Use: 
+	 module load netcdf-fortran
+	 ln -s makefile_config_egeon makefile_config
+	 make 
 
-Preparing Input Text File
-=========================
-See https://github.com/sergioh-pessoal/daycli_encoder/wiki/Imput_text_file
+
+
