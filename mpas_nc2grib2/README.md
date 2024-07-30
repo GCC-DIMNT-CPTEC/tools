@@ -1,7 +1,7 @@
 MPAS_NC2GRIB2
 ==========
 
-The MPAS_NC2GRIB2 is a software to read MONAN dataout in NETCDF format write in in FM92-GRIB (Version2)
+The MPAS_NC2GRIB2 is a software to read the MONAN dataout in NETCDF format and write in FM92-GRIB (Version2)
 
 Compilation Instructions
 ==========
