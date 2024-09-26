@@ -1,10 +1,10 @@
 # MPAS_NC2GRIB2
 
-The MPAS_NC2GRIB2 is a software to read the MONAN dataout in NETCDF format and write in FM92-GRIB (Version2)
+This software reads MONAN data files in netcdf format and writes them to FM92-GRIB (version 2)
 
 ## 1-Compilation Instructions
 
-To compile MPAS_NC2GRIB on linux, it is necessary the previous instalation of EcCodes and netcdf-fotran libraries 
+To compile MPAS_NC2GRIB on linux, it is necessary to previously install of **ECCODES** and **netcdf-fotran** libraries 
 
 ### 1.1 - Compilation in INPE egeon
  To compile in egeon.cptec.inpe.br with gfortran use: 
@@ -23,14 +23,15 @@ To use other fortran compilers or other compiler options, edit makefile_config_l
 
 ## 2 - Setting environment variables
 
-It is necessay set ECCODES_DIR and NFDIR environments variables.  
+Before run MPAS_NC2GRIB2 It is necessay set **ECCODES_DIR** and **NFDIR** environments variables.  
 
 ### 2.1 ECCODES_DIR
-Set ECCODES_DIR with path where ECCODES software is to software find the grib definitaions tables used in coding / decoding process.  As example,  in case the ECCODES was installed in user home directory, and in case of bash environement, edit the .bashrc file and add the follow commnad.
+Set ECCODES_DIR with path where ECCODES software is. This definition is necessary  to software find the grib definitions tables used in coding / decoding process. As example, in case bash terminal  edit the .bashrc file and add the follow commnad.
+
 
 	export ECCODES_DIR=/home/User_name/eccodes
 
-Note: the eccodes directory usualy contains the follow directories: bin, include, lib, share. The "share" it the directories where the grib definitions tables are. 
+**Note:** *The eccodes directory usualy contains the follow directories: bin, include, lib, share. The "share" is the directories where the grib definitions tables are.* 
 
 ### 2.2 NFDIR
 Set the NFDIR with the path where  NETCDF-FORTRAN is.  As examples:
@@ -49,18 +50,13 @@ Set the NFDIR with the path where  NETCDF-FORTRAN is.  As examples:
 
 
 
-# 4 - Running the examples to text
+# 4 - Running the examples for test
+The scripts to run MPAS_NC2GRIB software with examples file is in the  "examples" diretory.  Goto the "examples" and run:
 
-The scripts to run MPAS_NC2GRIB software with examples file is in the  "examples" diretory.  Goto the "examples" and:
+ - 1-download_sample_data.sh: This script download a set off MPAS_MONAN NETCDF file from ftp1.cptec.inpe.br and places them in **./datain** 
+ - Type **ls -ltr ./datain** to verify if the files were download.
 
- - Run '1-download_sample_data.sh' to download some  MPAS_MONAN NETCDF for test from ftp1.cptec.inpe.br to ./datain.  Type ls -ltr ./datain to verify if the file have been download:
-
-		MONAN_DIAG_G_POS_GFS_2024070900_2024070900.x1024002L55.nc
- 		MONAN_DIAG_G_POS_GFS_2024070900_2024070903.x1024002L55.nc
-	 	MONAN_DIAG_G_POS_GFS_2024070900_2024070906.x1024002L55.nc
-		MONAN_DIAG_G_POS_GFS_2024070900_2024070912.x1024002L55.nc
-		MONAN_DIAG_G_POS_GFS_2024070900_2024071000.x1024002L55.nc
- - Run '2-run.sh' to run MPAS_NC2GRIB to convert the MPAS_FILE to GRIB2 file. The grib2 files are placed in ./dataout 
+-  2-run.sh: This scripts runs MPAS_NC2GRIB to convert the MPAS_FILE in datain to GRIB2 file in dataout.  
 
 		MONAN_DIAG_G_POS_GFS_2024070900_2024070900.x1024002L55.grib2
 		MONAN_DIAG_G_POS_GFS_2024070900_2024070903.x1024002L55.grib2
