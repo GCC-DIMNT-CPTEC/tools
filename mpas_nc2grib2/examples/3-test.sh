@@ -4,14 +4,11 @@ module load netcdf-fortran
 a=`hostname`
 echo $a
 if [[ $a == *"egeon"* ]]; then
-	echo "It's there!"
+	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
 else
-	echo "It's not there!"
+	export NC2GRIB_DIR=../
 fi
 
-export NC2GRIB_DIR=../
-#export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
-exit
 DIR=./dataout
 START_TIME=2024070900
 for fct in 000 003 006 012 024 ; do
