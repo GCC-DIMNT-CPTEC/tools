@@ -43,6 +43,12 @@ Set the NFDIR with the path where  NETCDF-FORTRAN is.  As examples:
 
 		export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
 
+### 2.3 NC2GRIB_DIR
+Set the NC2GRIB_DIR with the path where mpas_nc2grib directory is. It is necessary to software find specific configuration in the  mpas_nc2grib2/settings directory.
+Example
+
+		export NC2GRIB_DIR=/home/User_name/mpas_nc2grib2
+
 # 3 - Checking if MPAS_NC2GRIB2 was sucessifully compiled
  Type the follow commnad
 
