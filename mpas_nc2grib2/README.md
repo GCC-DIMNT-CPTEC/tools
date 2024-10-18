@@ -62,10 +62,12 @@ The scripts to run MPAS_NC2GRIB software with examples file is in the  "examples
  - 1-download_sample_data.sh: This script download a set off MPAS_MONAN NETCDF file from ftp1.cptec.inpe.br and places them in **./datain** 
  - Type **ls -ltr ./datain** to verify if the files were download.
 
--  2-run.sh: This scripts runs MPAS_NC2GRIB to convert the MPAS_FILE in datain to GRIB2 file in dataout.  
+-  2-run_mpas_nc2grib.sh: This scripts runs MPAS_NC2GRIB to convert the MPAS_FILE in datain to GRIB2 file in dataout.  
 
 		MONAN_DIAG_G_POS_GFS_2024070900_2024070900.x1024002L55.grib2
 		MONAN_DIAG_G_POS_GFS_2024070900_2024070903.x1024002L55.grib2
 		MONAN_DIAG_G_POS_GFS_2024070900_2024070906.x1024002L55.grib2
 		MONAN_DIAG_G_POS_GFS_2024070900_2024070912.x1024002L55.grib2
 		MONAN_DIAG_G_POS_GFS_2024070900_2024071000.x1024002L55.grib2
+  - Type **ls -ltr ./dataout** to verify if the grib files were generated 
+  - 3-grib_decoding_test.sh: This script do the inverse process, i.e. decoding the grib file to nc as well as into other formats. 
