@@ -1,11 +1,14 @@
 #!/bin/bash
+a=`hostname`
+echo $a
+if [[ $a == *"egeon"* ]]; then
+	module load cdo-2.0.4-gcc-9.4.0-bjulvnd
+	module load netcdf-fortran
+	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
+else
+	export NC2GRIB_DIR=../
+fi
 
-# In egeon type
-#module load cdo-2.0.4-gcc-9.4.0-bjulvnd
-#module load netcdf-fortran
-#export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
-
-export NC2GRIB_DIR=../
 dirin=./datain
 dirout=./dataout
 mkdir -p $dirout

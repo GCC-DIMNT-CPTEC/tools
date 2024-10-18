@@ -1,9 +1,9 @@
 #!/bin/bash
-module load cdo-2.0.4-gcc-9.4.0-bjulvnd
-module load netcdf-fortran
 a=`hostname`
 echo $a
 if [[ $a == *"egeon"* ]]; then
+	module load cdo-2.0.4-gcc-9.4.0-bjulvnd
+	module load netcdf-fortran
 	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
 else
 	export NC2GRIB_DIR=../
