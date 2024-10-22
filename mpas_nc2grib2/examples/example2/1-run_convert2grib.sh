@@ -47,10 +47,7 @@ for fff in {000..120..003}  ;  do
    #ncdump -h $filetmp > $filetmp.txt
    #mpas_nc2grib2.x -i $filetmp -o $fileout.ccsds -s $yy0$mm0$dd0$hh0 -f $fff -v 3 -p 1
    mpas_nc2grib2.x -i $filetmp -o $fileout -s $yy0$mm0$dd0$hh0 -f $fff -v 0 -p 0
-   echo "***** Fileout="$fileout0
-   echo "***** fff="$fff
-   g2ctl ${fileout0} > ${fileout0}.ctl 
-   gribmap -i ${fileout0}.ctl
+   
 done 
 
 
