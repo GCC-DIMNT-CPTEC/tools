@@ -56,6 +56,8 @@ program mpas_nc2grib2
   character(len=254)               ::longname
   INTEGER                          ::dlength
   character (len = 1024)           ::FILE_NAME
+  character(LEN=8)                 ::ymd
+  integer*8                        ::iymd
 
   character (len = 1024)           ::OUTFILE, OUTFILE2,outfile_c
   character(len=1),dimension(100)  ::namearg   !. Nome dos argumentos!
@@ -265,7 +267,9 @@ program mpas_nc2grib2
     !---------------------------------------------
     
     grib_def%edition=2
-    grib_def%idate=val(date_ymd(start_date))
+    ymd=date_ymd(start_date)
+    read(ymd,'(i8)')iymd
+    grib_def%idate=iymd
     grib_def%itime=val(time_hm(start_date)//"00")
     !grib_def%GridType="regular_ll"
     allocate (grib_def%lon(0:nlon-1))
