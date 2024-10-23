@@ -27,7 +27,7 @@ for fff in {000..120..003}  ;  do
    echo ">"$fff
    source ./get_date.sh $run  $fff
     
-   
+   #dirin=/mnt/beegfs/monan/tc/1.0.0
    dirin=/mnt/beegfs/monan/scripts_CD-CT_dev/scripts_CD-CT/dataout/$yy0$mm0$dd0$hh0/Post
    dirtmp=/mnt/beegfs/sergio.ferreira/DADOS/MONAN/nc/$yy0$mm0$dd0$hh0
    dirout=/mnt/beegfs/sergio.ferreira/DADOS/MONAN/GRIB2/$yy0$mm0$dd0$hh0
