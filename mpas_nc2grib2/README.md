@@ -57,7 +57,9 @@ Example
 
 
 # 4 - Running the examples for test
-The scripts to run MPAS_NC2GRIB software with examples file is in the  "examples" diretory.  Goto the "examples" and run:
+
+## 4.1 - example1 - Generic example
+Generic scripts to run MPAS_NC2GRIB software with examples is in the  "examples/example1" diretory.  So, go to the "examples/example1" and run the followed scripts:
 
  - 1-download_sample_data.sh: This script download a set off MPAS_MONAN NETCDF file from ftp1.cptec.inpe.br and places them in **./datain** 
  - Type **ls -ltr ./datain** to verify if the files were download.
@@ -71,3 +73,7 @@ The scripts to run MPAS_NC2GRIB software with examples file is in the  "examples
 		MONAN_DIAG_G_POS_GFS_2024070900_2024071000.x1024002L55.grib2
   - Type **ls -ltr ./dataout** to verify if the grib files were generated 
   - 3-grib_decoding_test.sh: This script do the inverse process, i.e. decoding the grib file to nc as well as into other formats. 
+
+## 4.2 - example2 - Specific example to be use as test in egeon.cptec.inpe.br
+ 
+In the **examples/example2** you will find some scripts to run mpas_nc2grib2.x on Egeon. In these scripts, the path to access the MONAN data results in netcdf as well as the path to the directory for grib2 have been hard-coded defined. Therefore, before using these scripts, it is recommended to edit and modify these scripts  to make the necessary adjustments.
