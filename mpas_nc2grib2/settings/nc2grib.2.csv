@@ -15,8 +15,8 @@ uzonal          ,u    ,0, 0,2, 2,100, 0, 0, 0,u-component of wind  (m s-1)
 umeridional     ,v    ,0, 0,2, 3,100, 0, 0, 0,v-component of wind  (m s-1)
 omega           ,w    ,0, 0,2, 8,100, 0, 0, 0,Vertical velocity (pressure)  (Pa s-1)
 w               ,wr   ,0, 0,2, 9,100, 0, 0, 0,Geometric vertical velocity
-rainnc          ,tp   ,8, 0,1, 8,  1, 0, 0,-1,surface Total Precipitation [kg/m^2]
-rainc           ,cp   ,8, 0,1,10,  1, 0, 0,-1,Convective precipitation (kg m-2)   (Table 4.2.0.1.table)
+rainnc          ,ncpcp,8, 0,1, 9,  1, 0, 0,-1,Large scale precipitation (non-convective) (kg m-2) (Table 4.2.0.1.table)
+rainc           ,acpcp,8, 0,1,10,  1, 0, 0,-1,Convective precipitation (kg m-2)   (Table 4.2.0.1.table)
 lh              ,slhf ,0, 0,0,10,  1, 0, 0, 0,Surface latent heat flux w/kg
 hpbl            ,hpbl ,0, 0,3,18,  1, 0, 0, 0,Planetary boundary layer height  (m)
 cd              ,cd   ,0, 0,2,29,  1, 0, 0, 0,Drag coefficient

@@ -16,13 +16,19 @@ for fct in 000 003 006 012 024 ; do
    END_TIME=$yy2$mm2$dd2$hh2
    INPUT_GRIB=./MONAN_DIAG_G_POS_GFS_${START_TIME}_${END_TIME}.x1024002L55.grib2
    OUTPUT_NC=./MONAN_DIAG_G_POS_GFS_${START_TIME}_${END_TIME}.x1024002L55.nc
+   OUTPUT_GRB1=./MONAN_DIAG_G_POS_GFS_${START_TIME}_${END_TIME}.x1024002L55.grib1
    OUTPUT_CTL=./MONAN_DIAG_G_POS_GFS_${START_TIME}_${END_TIME}.x1024002L55.ctl
    OUTPUT_TXT=./MONAN_DIAG_G_POS_GFS_${START_TIME}_${END_TIME}.x1024002L55.txt
   cd $DIR
   #
-  # Conversao para NETCDF com CDO
+  # Conversao GRIB2 para NETCDF com CDO
   #
   cdo -f nc setgridtype,regular $INPUT_GRIB $OUTPUT_NC
+
+  #
+  # Conversao GRIB2 para GRIB1 com CDO
+  #
+  cdo -f grb copy $INPUT_GRIB $OUTPUT_GRB1
 
   #
   # GRIBMAP para abertura no GRADS
