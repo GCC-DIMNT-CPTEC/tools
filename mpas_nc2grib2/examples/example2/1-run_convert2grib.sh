@@ -23,7 +23,7 @@ run=$1
 source ./get_date.sh $run 
 hh0=00
 run=$yy0$mm0$dd0$hh0
-for fff in {000..120..003}  ;  do 
+for fff in {000..240..003}  ;  do 
    echo ">"$fff
    source ./get_date.sh $run  $fff
     
@@ -49,5 +49,6 @@ for fff in {000..120..003}  ;  do
    mpas_nc2grib2.x -i $filetmp -o $fileout -s $yy0$mm0$dd0$hh0 -f $fff -v 0 -p 0
    
 done 
+rm -rf $dirtmp
 
 
