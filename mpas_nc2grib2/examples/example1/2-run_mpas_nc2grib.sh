@@ -24,5 +24,5 @@ for fff in 000 003 006 012 024 ; do
 
     filein=$dirin/MONAN_DIAG_G_POS_GFS_${start_time}_${forecast_time}.x1024002L55.nc
 
-    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 0
+    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 1
 done

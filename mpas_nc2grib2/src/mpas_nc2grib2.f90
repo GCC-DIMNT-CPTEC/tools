@@ -49,6 +49,7 @@ program mpas_nc2grib2
   integer                              :: ifct
   real                                 :: P, Tv
   integer                              :: step
+  real                                 ::lonf,latf
 
 
   CHARACTER(LEN=15)                ::dname
@@ -187,13 +188,16 @@ program mpas_nc2grib2
  !*** Read Lon ***
   call check( nf90_inq_dimid(ncid, trim(clon),dimid))
   call check(nf90_get_var(ncid, dimid, lon) )
-  if (verbose>1) print *,":MPAS_NC2GRIB2: Varid=",varid,"lon = [", lon(0),"-",lon(nlon-1),"]"
+  !lonf=int(lon(nlon-1)*(10.0**4))/(10.0**4.0)
+  lonf=int(lon(nlon-1)*(10**4))/(10**4)
+  if (verbose>1) print *,":MPAS_NC2GRIB2: Varid=",varid,"lon = [", lon(0),"-",lonf ,"]"
   
   
  !*** Read Lat ***
   call check( nf90_inq_dimid(ncid, trim(clat),dimid))
   call check(nf90_get_var(ncid, dimid, lat) )
-  if (verbose>1) print *,":MPAS_NC2GRIB2: Varid=",varid,"lat = [", lat(0),"-",lat(nlat-1),"]"
+  latf=int(lat(nlat-1)*(10**4))/10.0**4.0
+  if (verbose>1) print *,":MPAS_NC2GRIB2: Varid=",varid,"lat = [", lat(0),"-",latf,"]"
 
  !*** Read Lev ***
   call check( nf90_inq_dimid(ncid, trim(clev),dimid))
@@ -278,10 +282,11 @@ program mpas_nc2grib2
     grib_def%lon(:)=lon(:)
     grib_def%lat(:)=lat(:)
     grib_def%lev(:)=lev(:)
-    grib_def%ilat=grib_def%lat(1)
-    grib_def%ilon=grib_def%lon(1)
-    grib_def%dlat=grib_def%lat(2)-grib_def%lat(1)
-    grib_def%dlon=grib_def%lon(2)-grib_def%lon(1)
+    grib_def%ilat=grib_def%lat(0)
+    grib_def%ilon=grib_def%lon(0)
+    grib_def%dlat=(latf-grib_def%lat(0))/nlat
+    grib_def%dlon=(lonf-grib_def%lon(0))/nlon
+
     grib_def%NI=nlon
     grib_def%NJ=nlat
     grib_def%NK=nlev
