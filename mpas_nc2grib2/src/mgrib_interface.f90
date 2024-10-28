@@ -95,8 +95,8 @@ module mgrib_interface
     ilat=grib_def%ilat
     ilon=grib_def%ilon
 	editionNumber=grib_def%edition
-	flat=ilat+(Nj)*grib_def%dlat
-	flon=ilon+(Ni)*grib_def%dlon
+	flat=ilat+(Nj-1)*grib_def%dlat
+	flon=ilon+(Ni-1)*grib_def%dlon
 	dlat=grib_def%dlat
 	dlon=grib_def%dlon
 	packingType=grib_def%packingType

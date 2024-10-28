@@ -16,9 +16,9 @@ mkdir -p $dirout
 filein=$dirin/MONAN_DIAG_G_POS_GFS_2024062700_2024062700.x1024002L55.nc
 fileout=$dirout/MONAN_DIAG_G_POS_GFS_%Y4%M2%D2%H2_%y4%m2%d2%h2.x1024002L55
 
-start_time=2024070900
-
-for fff in 000 003 006 012 024 ; do
+#start_time=2024070900
+start_time=2024100100
+for fff in 000 006 012 018 024 ; do
     source ./get_date.sh ${start_time}${fff}
     forecast_time=$yy2$mm2$dd2$hh2
 

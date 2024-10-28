@@ -49,7 +49,7 @@ program mpas_nc2grib2
   integer                              :: ifct
   real                                 :: P, Tv
   integer                              :: step
-  real                                 ::lonf,latf
+  real *8                              ::lonf,loni,dlon,latf,lati,dlat
 
 
   CHARACTER(LEN=15)                ::dname
@@ -152,10 +152,10 @@ program mpas_nc2grib2
 
         select case(trim(dname))
 		case ('lon','LON','longitude')
-			nlon=dlength
+			nlon=dlength-1
 			clon=trim(dname)
 		case ('lat','LAT','latitude')
-			nlat=dlength
+			nlat=dlength-1
 			clat=trim(dname)
  		case ('lev','LEV','level')
 			nlev=dlength
@@ -188,23 +188,35 @@ program mpas_nc2grib2
  !*** Read Lon ***
   call check( nf90_inq_dimid(ncid, trim(clon),dimid))
   call check(nf90_get_var(ncid, dimid, lon) )
-  !lonf=int(lon(nlon-1)*(10.0**4))/(10.0**4.0)
-  lonf=int(lon(nlon-1)*(10**4))/(10**4)
-  if (verbose>1) print *,":MPAS_NC2GRIB2: Varid=",varid,"lon = [", lon(0),"-",lonf ,"]"
+
+  ! Recalculate longitudes from boders to the center of grid points
+   dlon=(lon(nlon-1)-lon(0))/(nlon-1)
+   dlon=round(dlon,4)
+   loni=lon(0)+dlon/2.0
+   lonf=dlon*(nlon-1)+loni
+
+  if (verbose>0) print *,":MPAS_NC2GRIB2: Varid=",varid,"lon = [", loni,":",lonf ,":",dlon," ]"
   
   
  !*** Read Lat ***
   call check( nf90_inq_dimid(ncid, trim(clat),dimid))
   call check(nf90_get_var(ncid, dimid, lat) )
-  latf=int(lat(nlat-1)*(10**4))/10.0**4.0
-  if (verbose>1) print *,":MPAS_NC2GRIB2: Varid=",varid,"lat = [", lat(0),"-",latf,"]"
+
+   ! Recalculate latitudes from boders to the center of grid points
+   dlat=(lat(nlat-1)-lat(0))/(nlat-1)
+   dlat=round(dlat,4)
+   lati=lat(0)+dlat/2.0
+   latf=dlat*(nlat-1)+lati
+
+
+  if (verbose>0) print *,":MPAS_NC2GRIB2: Varid=",varid,"lat = [", lati,":",latf,":",dlat,"]"
 
  !*** Read Lev ***
   call check( nf90_inq_dimid(ncid, trim(clev),dimid))
   call check(nf90_get_var(ncid, dimid, lev) )
-  if (verbose>1) print *,":MPAS_NC2GRIB2: Varid=",varid,"lev = [", lev(0),"-",lev(nlev-1),"]"
+  if (verbose>0) print *,":MPAS_NC2GRIB2: Varid=",varid,"lev = [", lev(0),"-",lev(nlev-1),"]"
 
-  if (verbose>1) then 
+  if (verbose>0) then
   	print *,":MPAS_NC2GRIB2: Variables in netcdf: nvar=",nvar
 	print *,":MPAS_NC2GRIB2: Selected variables : svar=",svar
   end if 
@@ -282,10 +294,10 @@ program mpas_nc2grib2
     grib_def%lon(:)=lon(:)
     grib_def%lat(:)=lat(:)
     grib_def%lev(:)=lev(:)
-    grib_def%ilat=grib_def%lat(0)
-    grib_def%ilon=grib_def%lon(0)
-    grib_def%dlat=(latf-grib_def%lat(0))/nlat
-    grib_def%dlon=(lonf-grib_def%lon(0))/nlon
+    grib_def%ilat=lati
+    grib_def%ilon=loni
+    grib_def%dlat=dlat
+    grib_def%dlon=dlon
 
     grib_def%NI=nlon
     grib_def%NJ=nlat
@@ -415,4 +427,14 @@ contains
 
 	 current_filename=trim(filename)
    end function
+
+   real function round(val, n)
+      implicit none
+      real*8,intent(in) :: val
+      integer,intent(in) :: n
+      real*8::val2
+      val2=val*(10.0**n)+0.5
+      round = int(val2)/10.0**n
+    end function round
+
 end program

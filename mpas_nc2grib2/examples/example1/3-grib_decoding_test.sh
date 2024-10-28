@@ -10,8 +10,8 @@ else
 fi
 
 DIR=./dataout
-START_TIME=2024070900
-for fct in 000 003 006 012 024 ; do
+START_TIME=2024100100
+for fct in 000 006 012 018 024 ; do
    source ./get_date.sh ${START_TIME} $fct
    END_TIME=$yy2$mm2$dd2$hh2
    INPUT_GRIB=./MONAN_DIAG_G_POS_GFS_${START_TIME}_${END_TIME}.x1024002L55.grib2
@@ -28,7 +28,7 @@ for fct in 000 003 006 012 024 ; do
   #
   # Conversao GRIB2 para GRIB1 com CDO
   #
-  cdo -f grb copy $INPUT_GRIB $OUTPUT_GRB1
+  #cdo -f grb copy $INPUT_GRIB $OUTPUT_GRB1
 
   #
   # GRIBMAP para abertura no GRADS
