@@ -46,9 +46,9 @@ for fff in {000..240..003}  ;  do
    cdo select,startdate=$par1,enddate=$par2 $filein $filetmp
    #ncdump -h $filetmp > $filetmp.txt
    #mpas_nc2grib2.x -i $filetmp -o $fileout.ccsds -s $yy0$mm0$dd0$hh0 -f $fff -v 3 -p 1
-   mpas_nc2grib2.x -i $filetmp -o $fileout -s $yy0$mm0$dd0$hh0 -f $fff -v 0 -p 0
+   mpas_nc2grib2.x -i $filetmp -o $fileout -s $yy0$mm0$dd0$hh0 -f $fff -v 1 -p 0
    
 done 
-rm -rf $dirtmp
+#rm -rf $dirtmp
 
 
