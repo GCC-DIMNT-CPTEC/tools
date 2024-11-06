@@ -55,6 +55,7 @@ program mpas_nc2grib2
   CHARACTER(LEN=15)                ::dname
   character(len=nf90_max_name)     ::vin_name
   character(len=254)               ::longname
+  character(len=254)               ::conftable 
   INTEGER                          ::dlength
   character (len = 1024)           ::FILE_NAME
   character(LEN=8)                 ::ymd
@@ -81,7 +82,7 @@ program mpas_nc2grib2
   !-----------
   
    call get_parameter(namearg,arg,nargs)
-                  !
+   conftable="nc2grib.2.csv"
    verbose=0                                                                          !
       do i=1, nargs 
         select case (namearg(i))
@@ -100,6 +101,8 @@ program mpas_nc2grib2
               ifct=val(arg(i))
             case ("v")
               verbose=val(arg(i))
+	    case ("c")
+	      conftable=trim(arg(i))	
             case default
                 
 	    end select
@@ -108,21 +111,24 @@ program mpas_nc2grib2
        print *,"|--------------------------------------------------------------+"
        print *,"| mpas_nc2grib2.x                                              |"
        print *,"|--------------------------------------------------------------+"
-       print *,"| MCTI-INPE (2024-07-08) V. 1.0                                |"
+       print *,"| MCTI-INPE (2024-11-06) V. 1.1                                |"
        print *,"|--------------------------------------------------------------+"
 
       if (x1*x2*x3==0) then
        print *,"| Use mpas_convert1.x -i <filename.nc> -o <outfile_basename>   |"
-       print *,"|                          -s yyyymmddhh -f ffff  {-r <option>}|"
+       print *,"|                          -s yyyymmddhh -f fff  {Ooptions }   |"
        print *,"|                                                              |"
        print *,"|    -s start_time: (yyyymmddhh)                               |"
        print *,"|    -f forecast time  (fff)                                   |"
        print *,"|                                                              |"
+       print *,"| Options:                                                     |"
        print *,"|    -p :packing type                                          |"
        print *,"|        :0=  grid_simple                                      |"
        print *,"|        :1=  grid_ccsds                                       |"
+       print *,"|        (Default: 0)                                          |"
        print *,"|                                                              |"
-       print *,"|     Default: 0                                               |"
+       print *,"|    -c :<Configuration table name>                            |"
+       print *,"|        (Default= nc2grib.2.csv )                             |"
        print *,"|--------------------------------------------------------------+"
 
 	stop
@@ -173,7 +179,7 @@ program mpas_nc2grib2
      end do
 
      ! Inicialize parameter definitions
-     call init_parm ("nc2grib.2.csv")
+     call init_parm (conftable)
      allocate (check_var(0:svar))
      allocate (lon(0:nlon-1))
      allocate (lat(0:nlat-1))

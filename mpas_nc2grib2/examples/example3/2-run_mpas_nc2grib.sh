@@ -13,16 +13,14 @@ dirin=./datain
 dirout=./dataout
 mkdir -p $dirout
 
-filein=$dirin/MONAN_DIAG_G_POS_GFS_2024062700_2024062700.x1024002L55.nc
-fileout=$dirout/MONAN_DIAG_G_POS_GFS_%Y4%M2%D2%H2_%y4%m2%d2%h2.x1024002L55
+fileout=$dirout/monan.t00z.atm.Op25_%Y4%M2%D2%H2_%y4%m2%d2%h2
+fileout2=$dirout/monan.t00z.atm.Op25_%Y4%M2%D2%H2_%y4%m2%d2%h2_ccsds
 
-#start_time=2024070900
-start_time=2024100100
+start_time=2021062600
+
 for fff in 000 006 012 018 024 ; do
-    source ./get_date.sh ${start_time}${fff}
-    forecast_time=$yy2$mm2$dd2$hh2
-
-    filein=$dirin/MONAN_DIAG_G_POS_GFS_${start_time}_${forecast_time}.x1024002L55.nc
-
-    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 1
+    filein=$dirin/monan.t00z.atm.0p25.f${fff}.${start_time}.nc 
+    #cdo -f grb2 -copy $filein $filein.grib2
+    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 1 -c nc2grib.2_v2.csv
+    #$NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout2 -p 1 -s $start_time -f $fff -v 1
 done
