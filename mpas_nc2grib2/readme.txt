@@ -8,6 +8,7 @@ Compilation Instructions
  (1) - compilation at egeon
   	 Use: 
 	 module load netcdf-fortran
+         module load libaec-1.0.5-gcc-9.4.0-4qmyxr4
 	 ln -s makefile_config_egeon makefile_config
 	 make 
 
