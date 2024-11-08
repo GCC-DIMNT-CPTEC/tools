@@ -16,10 +16,12 @@ print ("-----------------------------------------------------------")
 print ("Version=",version)
 print ("Definition Path=",definition_path)
 print ("-----------------------------------------------------------")
-print ('Find the parameter number by product discipline and parameter category ')
-op=input("Enter Y to continue:")
+print ("4.2 - Parameter number by product discipline and parameter category")
+print ("4.5 - Fixed surface types and units")
 
-if (op.upper()=='Y')  :
+op=float(input("Enter option to continue:"))
+
+if (op==4.2)  :
     filename=definition_path+"/0.0.table"
     file = open(filename, "r")
     content = file.read()
@@ -51,4 +53,14 @@ if (op.upper()=='Y')  :
     print ("Discipline..:",dis)
     print ("Category....:",cat)
     print ("Parameter...:",par)
+
+if (op==4.5) :
+    filename=definition_path+"/4.5.table"
+    print ("-----------------------------------------------------------")
+    print ("table=",filename)
+    print ("-----------------------------------------------------------")
+    file = open(filename, "r")
+    content = file.read()
+    print(content)
+    file.close()
 
