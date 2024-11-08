@@ -1,20 +1,20 @@
 NC_Name,cfVarName,Templete, Discipline,Category,ParNumber,tflevel,sValueFFS,sFactorFFS,timeint,Varname
-t2_isobaric     ,t2m  ,0, 0,0, 0,103, 2, 0, 0,2 metre temperature
+t2m             ,t2m  ,0, 0,0, 0,103, 2, 0, 0,2 metre temperature
 q2              ,sh2  ,0, 0,1, 0,103, 2, 0, 0,2 metre specific humidity
 u10             ,u10  ,0, 0,2, 2,103,10, 0, 0,10 metre U wind component
 v10             ,v10  ,0, 0,2, 3,103,10, 0, 0,10 metre V wind component
 mslp            ,prmsl,0, 0,3, 1,101, 0, 0, 0,Pressure reduced to MSL  (Pa)
 surface_pressure,sp   ,0, 0,3, 0,  1, 0, 0, 0,Surface pressure (PA)
 sst             ,sst  ,0,10,3, 0,  1, 0, 0, 0,Sea surface temperature
-zgeo            ,gh   ,0, 0,3, 5,100, 0, 0, 0,Geopotential height (gpm)
+zgeo_isobaric   ,gh   ,0, 0,3, 5,100, 0, 0, 0,Geopotential height (gpm)
 height          ,dist ,0, 0,3, 6,100, 0, 0, 0,Geometric height (m)
-temperature     ,t    ,0, 0,0, 0,100, 0, 0, 0,Temperature (K)
+#t2_isobaric     ,t    ,0, 0,0, 0,100, 0, 0, 0,Temperature (K)
 spechum         ,q    ,0, 0,1, 0,100, 0, 0, 0,Specific humidity  (kg kg-1)
 relhum          ,rh   ,0, 0,1, 1,100, 0, 0, 0,Relative humidity  (%)
-uzonal          ,u    ,0, 0,2, 2,100, 0, 0, 0,u-component of wind  (m s-1)
-umeridional     ,v    ,0, 0,2, 3,100, 0, 0, 0,v-component of wind  (m s-1)
+uvel_isobaric   ,u    ,0, 0,2, 2,100, 0, 0, 0,u-component of wind  (m s-1)
+vvel_isobaric   ,v    ,0, 0,2, 3,100, 0, 0, 0,v-component of wind  (m s-1)
 omega           ,w    ,0, 0,2, 8,100, 0, 0, 0,Vertical velocity (pressure)  (Pa s-1)
-w               ,wr   ,0, 0,2, 9,100, 0, 0, 0,Geometric vertical velocity
+wvel_isobaric   ,wr   ,0, 0,2, 9,100, 0, 0, 0,Geometric vertical velocity
 rainnc          ,ncpcp,8, 0,1, 9,  1, 0, 0,-1,Large scale precipitation (non-convective) (kg m-2) (Table 4.2.0.1.table)
 rainc           ,acpcp,8, 0,1,10,  1, 0, 0,-1,Convective precipitation (kg m-2)   (Table 4.2.0.1.table)
 lh              ,slhf ,0, 0,0,10,  1, 0, 0, 0,Surface latent heat flux w/kg

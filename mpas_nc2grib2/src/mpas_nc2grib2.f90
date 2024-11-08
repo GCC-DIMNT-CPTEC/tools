@@ -15,6 +15,8 @@ program mpas_nc2grib2
 !-----------------------------------------------------------------------
 ! HISTORY
 ! 2024-07-07  V1.0 SHSF: Original version
+! 2024-11-06  V1.1 SHSF: Check of sequence of dimension (matrix shape) in netcdf was implemented
+!                      : for 2 cases: xyzt and zxyt
 
   use netcdf
   use stringflib
@@ -32,15 +34,18 @@ program mpas_nc2grib2
   integer::ndim,nvar
   character(len=1024)::  name
   integer  :: xtype, len, attnum
-
+  integer :: ndims
+  integer,dimension(6)::dimids
   integer::nlat,nlon,nlev
-  character(len=15)       ::Clat,Clon,Clev
-  character(len=60)       ::time_unit
+  character(len=1),dimension(4)::cdim    ! Identification of dimension (x,y,z, etc)
+  character(len=4)             ::seqdim  ! Sequence of dimensions (x,y,z etc)
+  character(len=15)            ::Clat,Clon,Clev
+  character(len=60)            ::time_unit
   integer::nt
   integer::vv
   real :: hh
   real,dimension(:),      allocatable  :: lon,lat,lev
-  real,dimension(:,:,:,:,:),allocatable:: vxyzt
+  real,dimension(:,:,:,:,:),allocatable:: vxyzt,vzxyt
   real,dimension(:,:,:),allocatable    :: dz,dz2,zp
   logical,dimension(:),allocatable     :: check_var
   type(grib_interface_def)             :: grib_def
@@ -115,8 +120,8 @@ program mpas_nc2grib2
        print *,"|--------------------------------------------------------------+"
 
       if (x1*x2*x3==0) then
-       print *,"| Use mpas_convert1.x -i <filename.nc> -o <outfile_basename>   |"
-       print *,"|                          -s yyyymmddhh -f fff  {Ooptions }   |"
+       print *,"| Use mpas_nc2grib2.x -i <filename.nc> -o <outfile_basename>   |"
+       print *,"|                          -s yyyymmddhh -f fff  { Options }   |"
        print *,"|                                                              |"
        print *,"|    -s start_time: (yyyymmddhh)                               |"
        print *,"|    -f forecast time  (fff)                                   |"
@@ -152,22 +157,27 @@ program mpas_nc2grib2
      call check( nf90_inquire(ncid,ndim,nvar))
      print *,":MPAS_NC2GRIB2: ndim=",ndim
      print *,":MPAS_NC2GRIB2: ncid=",ncid
+     print *,":MPAS_NC2GRIB2: nvar=",nvar
      print *, "nf90_max_name=",nf90_max_name
      do i =1,ndim
      	call check(nf90_inquire_dimension(ncid,i,dname,len=dlength))
 
         select case(trim(dname))
 		case ('lon','LON','longitude')
-			nlon=dlength-1
+			nlon=dlength
 			clon=trim(dname)
+			cdim(i)="X"
 		case ('lat','LAT','latitude')
-			nlat=dlength-1
+			nlat=dlength
 			clat=trim(dname)
+            cdim(i)="Y"
  		case ('lev','LEV','level')
 			nlev=dlength
 			clev=trim(dname)
+            cdim(i)="Z"
 		case ('time','TIME')
 			nt=dlength
+			cdim(i)="T"
 			call check(nf90_get_att(ncid, i, "units", time_unit))
 			ref_date=start_date+(ifct/24.0)
 			if (verbose>0) print *,":MPAS_NC2GRIB2: NC Time unit=",trim(time_unit)
@@ -177,6 +187,19 @@ program mpas_nc2grib2
 			print *, ":MPAS_NC2GRIB2: ERROR: nc_check for dimensions!"; stop
 		end select
      end do
+     ! Check the sequence xyzt in the variables
+     do varid = 5,nvar
+      call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
+
+      if (dimids(4)>0) then
+        seqdim=""
+        do i=1,4
+          seqdim=trim(seqdim)//cdim(dimids(i))
+        end do
+        print *,":MPAS_NC2GRIB2: Matrix shape = [ ",trim(seqdim)," ]"
+        exit
+      end if
+     end do
 
      ! Inicialize parameter definitions
      call init_parm (conftable)
@@ -184,7 +207,15 @@ program mpas_nc2grib2
      allocate (lon(0:nlon-1))
      allocate (lat(0:nlat-1))
      allocate (lev(0:nlev-1))
-     allocate (vxyzt(0:svar,0:nlon-1,0:nlat-1,0:nlev-1,0:0))
+     if (seqdim=="XYZT") then
+          allocate (vxyzt(0:svar,0:nlon-1,0:nlat-1,0:nlev-1,0:nt-1))
+     elseif (seqdim=="ZXYT") then
+          allocate(vzxyt(0:svar,0:nlev-1,0:nlon-1,0:nlat-1,0:nt-1))
+     else
+         print *,":MPAS_NC2GRIB2: ERROR: unrecognized matrix shape"
+         print *,":MPAS_NC2GRIB2: STOP"
+         stop
+     end if
      check_var(:)=.false.
 
  !-----------
@@ -198,10 +229,13 @@ program mpas_nc2grib2
   ! Recalculate longitudes from boders to the center of grid points
    dlon=(lon(nlon-1)-lon(0))/(nlon-1)
    dlon=round(dlon,4)
-   loni=lon(0)+dlon/2.0
-   lonf=dlon*(nlon-1)+loni
+   loni=lon(0)
+   lonf=lon(nlon-1)
 
-  if (verbose>0) print *,":MPAS_NC2GRIB2: Varid=",varid,"lon = [", loni,":",lonf ,":",dlon," ]"
+   !loni=lon(0)+dlon/2.0
+   !lonf=dlon*(nlon-1)+loni
+
+  if (verbose>0) print *,":MPAS_NC2GRIB2: nlon=",nlon,"lon = [", loni,":",lonf ,":",dlon," ]"
   
   
  !*** Read Lat ***
@@ -211,44 +245,67 @@ program mpas_nc2grib2
    ! Recalculate latitudes from boders to the center of grid points
    dlat=(lat(nlat-1)-lat(0))/(nlat-1)
    dlat=round(dlat,4)
-   lati=lat(0)+dlat/2.0
-   latf=dlat*(nlat-1)+lati
+   lati=lat(0)
+   latf=lat(nlat-1)
+
+   !lati=lat(0)+dlat/2.0
+   !latf=dlat*(nlat-1)+lati
 
 
-  if (verbose>0) print *,":MPAS_NC2GRIB2: Varid=",varid,"lat = [", lati,":",latf,":",dlat,"]"
+  if (verbose>0) print *,":MPAS_NC2GRIB2: nlat=",nlat,"lat = [", lati,":",latf,":",dlat,"]"
 
  !*** Read Lev ***
   call check( nf90_inq_dimid(ncid, trim(clev),dimid))
   call check(nf90_get_var(ncid, dimid, lev) )
-  if (verbose>0) print *,":MPAS_NC2GRIB2: Varid=",varid,"lev = [", lev(0),"-",lev(nlev-1),"]"
+  if (verbose>0) print *,":MPAS_NC2GRIB2: nlev=",nlev,"lev = [", lev(0),"-",lev(nlev-1),"]"
 
   if (verbose>0) then
   	print *,":MPAS_NC2GRIB2: Variables in netcdf: nvar=",nvar
 	print *,":MPAS_NC2GRIB2: Selected variables : svar=",svar
   end if 
-
   call check( nf90_inquire(ncid,ndim,nvar))
- 
+
   do varid = 5,nvar
     vin_name=""
 
-    call check( nf90_inquire_variable(ncid, varid, vin_name))
+    call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims))
 
     if ( len_trim(vin_name)==0) then 
-    	print *,":MPAS_NC2GRIB2: Error in nf90_inquire_variable!"
-	print *,"  ncid,varid=",ncid,varid
-	stop
+        print *,":MPAS_NC2GRIB2: Error in nf90_inquire_variable!"
+        print *,"  ncid,varid=",ncid,varid
+        stop
      end if 
+
    i=get_ncVarName_index(vin_name)
    if (i>0) then
-      if (verbose>1) print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] OK"
+      if ((ndims>3).and.(var(i)%tflevel/=100)) then
+         print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] Error in the variable dimension deffinition"
+      else
+         if (verbose>1) print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] OK"
+      end if
+
       check_var(i)=.true.
        if (verbose>2) print *,"...Reading ",i," [",trim(vin_name),"]= ",trim(var(i)%VarName)
-       if (var(i)%tflevel/=100) then
-          call check(nf90_get_var(ncid, varid, vxyzt(i,:,:,0,:)))
+
+       if (seqdim=="XYZT") then
+       !------------------------------------------------------
+
+          if ((var(i)%tflevel/=100).and.(ndims==3)) then
+            call check(nf90_get_var(ncid, varid, vxyzt(i,:,:,0,:)))
+          else
+             call check(nf90_get_var(ncid, varid, vxyzt(i,:,:,:,:)))
+          end if
+       !-----------------------------------------------------------
        else
-          call check(nf90_get_var(ncid, varid, vxyzt(i,:,:,:,:)))
+       !-------------------------------------------------------------
+           if ((var(i)%tflevel/=100).and.(ndims==3)) then
+            call check(nf90_get_var(ncid, varid, vzxyt(i,0,:,:,:)))
+          else
+             call check(nf90_get_var(ncid, varid, vzxyt(i,:,:,:,:)))
+          end if
+       !--------------------------------------------------------------
        end if
+
     else
        if (verbose>2) then
            call check( nf90_get_att(ncid, varid,'long_name', longname))
@@ -331,7 +388,8 @@ program mpas_nc2grib2
     call openw_grib(outfile_c,grib_def)
 
 
-
+     if (seqdim=="XYZT") then
+     !------------------------------
       do i=1,svar
        if (check_var(i)) then
           if (var(i)%tflevel==100) then
@@ -345,14 +403,37 @@ program mpas_nc2grib2
          print *,i,"not found",var(i)
       end if
     end do
+    !------------------------------------
+    else
+    !-----------------------------------
+    do i=1,svar
+       if (check_var(i)) then
+          if (var(i)%tflevel==100) then
+             do k=0,grib_def%NK-1
+                call write_grib2(var(i),vzxyt(i,k,:,:,0),grib_def%lev(k),step)
+             end do
+           else
+             call write_grib2(var(i),vzxyt(i,0,:,:,0),0.0,step)
+           end if
+      else
+         print *,i,"not found",var(i)
+      end if
+    end do
+    !-----------------------------------
+    end if
 
     call close_grib()
   print *,"*** MPAS_NC2GRIB2: DONE *** "
   print *,""
 
-  deallocate (lat,lon,lev,vxyzt)
+  deallocate (lat,lon,lev)
   deallocate (grib_def%lon,grib_def%lat,grib_def%lev)
-  
+  if (seqdim=="XYZT") then
+    deallocate (vxyzt)
+  else
+    deallocate( vzxyt)
+  end if
+
 
 contains
   !

@@ -21,6 +21,6 @@ start_time=2021062600
 for fff in 000 006 012 018 024 ; do
     filein=$dirin/monan.t00z.atm.0p25.f${fff}.${start_time}.nc 
     #cdo -f grb2 -copy $filein $filein.grib2
-    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 1 -c nc2grib.2_v2.csv
+    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 3 -c nc2grib.2_v2.csv
     #$NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout2 -p 1 -s $start_time -f $fff -v 1
 done
