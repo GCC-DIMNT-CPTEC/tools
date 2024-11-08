@@ -44,3 +44,11 @@ if (op.upper()=='Y')  :
     print ("-----------------------------------------------------------")
     print(content)
     file.close()
+    par=input("Enter the parameter number :")
+
+    print ("-----------------------------------------------------------")
+    print ("Results:")
+    print ("Discipline..:",dis)
+    print ("Category....:",cat)
+    print ("Parameter...:",par)
+
