@@ -65,7 +65,7 @@ module mgrib_tables
        end if
        goto 19
 1919   continue
-   print *,"nvar=",nvar
+
    close(14)
 end subroutine
 
