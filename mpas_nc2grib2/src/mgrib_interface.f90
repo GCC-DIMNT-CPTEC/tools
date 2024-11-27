@@ -205,6 +205,8 @@ module mgrib_interface
 			call codes_set(igrib,"endStep",endStep)
 		endif 	
 		
+		!*** step type = "accuml, ave, instant
+		!*** codes_set__nc(Number of bit..... ) 
 
 		!# Code table 4.5: Fixed surface types and units
 		!print *,"cfVarName=",parm_id%cfVarname

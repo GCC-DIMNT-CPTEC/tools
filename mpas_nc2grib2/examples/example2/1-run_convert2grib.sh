@@ -14,7 +14,7 @@ if [ $# = 0 ]; then
    echo "                      : run,"
    echo "                      : yesterday"
    echo "                      : <yyyymmdd>"
-   echo "                      : 20240708"
+   echo "                      : 2024042000"
    echo "exit"
    exit
 fi
@@ -26,9 +26,10 @@ run=$yy0$mm0$dd0$hh0
 for fff in {000..240..003}  ;  do 
    echo ">"$fff
    source ./get_date.sh $run  $fff
-    
+   echo  $yy0$mm0$dd0$hh0
    #dirin=/mnt/beegfs/monan/tc/1.0.0
-   dirin=/mnt/beegfs/monan/scripts_CD-CT_dev/scripts_CD-CT/dataout/$yy0$mm0$dd0$hh0/Post
+#   dirin=/mnt/beegfs/monan/scripts_CD-CT_dev/scripts_CD-CT/dataout/$yy0$mm0$dd0$hh0/Post
+   dirin=/mnt/beegfs/monan/i610-MONAN-interpolacao_corrigida/scripts_CD-CT/dataout/$yy0$mm0$dd0$hh0/Post
    dirtmp=/mnt/beegfs/sergio.ferreira/DADOS/MONAN/nc/$yy0$mm0$dd0$hh0
    dirout=/mnt/beegfs/sergio.ferreira/DADOS/MONAN/GRIB2/$yy0$mm0$dd0$hh0
    ls  -ltr $dirin
