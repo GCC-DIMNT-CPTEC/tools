@@ -7,5 +7,5 @@
 #F90=gfortran -g  -fno-range-check -ffree-form  -fopenmp      # COMPILACAO COM gfortran e OPENMP (Debug) 
 
 F90=gfortran -O3 -fno-range-check -ffree-form  -fopenmp      # COMPILACAO COM gfortran e OPENMP (otimizacao 03)
-NFDIR=/usr/local
-
+#NFDIR=/usr/local
+NFDIR=/usr

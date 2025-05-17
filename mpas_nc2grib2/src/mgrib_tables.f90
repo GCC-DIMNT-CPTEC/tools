@@ -74,7 +74,7 @@ subroutine init_parm2(parm_table)
    character(len=*),intent(in)::parm_table
 
    character(len=1024)::table_name,fname
-   integer::i
+   integer::i,j
    character(len=256)::line
    character(len=32),dimension(1:20)::values
    integer::nv
@@ -90,6 +90,7 @@ subroutine init_parm2(parm_table)
 
 
    i=0
+   op=.false.
    print *,"initparm2****"
    call getenv("NC2GRIB_DIR",nc2grib_dir)
    if (len_trim(nc2grib_dir)==0) then
@@ -113,37 +114,73 @@ subroutine init_parm2(parm_table)
  else
    !Start reading the file
    call xml_options(info,ignore_whitespace = .true.)
-   do
+
+   do  ! While xml_ok
       call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data)
       if (xml_error(info)) then
          print *,"!handel errors"
          exit
       endif
+
+      if ((tag=="element")) then
+         if (.not.endtag) then
+            i=i+1
+            do j=1,no_attribs
+               !print *," Element [",i,"]",trim(attribs(1,j)),'<=',trim(attribs(2,j))
+                if (trim(attribs(1,j))=="NCVar") var(i)%ncVarName=trim(attribs(2,j))
+                if (trim(attribs(1,j))=="cfVarName") var(i)%cfVarName=trim(attribs(2,j))
+                if (trim(attribs(1,j))=="Name") var(i)%VarName=trim(attribs(2,j))
+            enddo
+            write(*,'("var(",i3.3,") -> ",3(" [",A,"]"))')i,trim(var(i)%ncVarName),trim(var(i)%cfVarname),trim(var(i)%Varname)
+         end if
+      end if
+
+
       if ((tag=="template")) then
         if (.not.endtag) then
-          !write(*,*) "tag,endtag=",trim(tag),endtag
-          !print *,"n. attribs=",no_attribs
-          !if (trim(attribs(1,1)=="def"))
-          i=i+1
-          var(i)%Template=val(attribs(2,i))
-          op=.true.
+            do j=1,no_attribs
+                if(trim(attribs(1,j))=="def") var(i)%Template=val(attribs(2,1))
+            end do
+            print *,"template=",var(i)%Template
+            op=.true.
         else
-          op=.false.
+            op=.false.
         end if
       end if
+
+
       if ((var(i)%template==0).and.(op)) then
-        print *,trim(tag),endtag
-        do i=1,no_attribs
-           write(*,*) i,">",trim(attribs(1,i)),'<=',trim(attribs(2,i))
+        do j=1,no_attribs
+           write(*,*) i,"< template 4.0 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
+          if (trim(attribs(1,j))=="discipline") var(i)%discipline=val(attribs(2,j))
+          if (trim(attribs(1,j))=="parameterCategory") var(i)%pCat=val(attribs(2,j))
+          if (trim(attribs(1,j))=="parameterNumber") var(i)%pNum=val(attribs(2,j))
+          if (trim(attribs(1,j))=="typeOfFirstFixedSurface") var(i)%tflevel=val(attribs(2,j))
+          if (trim(attribs(1,j))=="scaleFactorOfFirstFixedSurface") var(i)%sFactor_FFS=val(attribs(2,j))
+          if (trim(attribs(1,j))=="scaledValueOfFirstFixedSurface") var(i)%sValue_FFS=val(attribs(2,j))
+          print *,var(i)
+        enddo
+         var(i)%time_interval=0
+      elseif((var(i)%template==8).and.(op)) then
+         do j=1,no_attribs
+             write(*,*) i,"< template 4.8 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
+             if (trim(attribs(1,j))=="discipline") var(i)%discipline=val(attribs(2,j))
+             if (trim(attribs(1,j))=="parameterCategory") var(i)%pCat=val(attribs(2,j))
+             if (trim(attribs(1,j))=="parameterNumber") var(i)%pNum=val(attribs(2,j))
+             if (trim(attribs(1,j))=="typeOfFirstFixedSurface") var(i)%tflevel=val(attribs(2,j))
+             if (trim(attribs(1,j))=="scaleFactorOfFirstFixedSurface") var(i)%sFactor_FFS=val(attribs(2,j))
+             if (trim(attribs(1,j))=="scaledValueOfFirstFixedSurface") var(i)%sValue_FFS=val(attribs(2,j))
+             if (trim(attribs(1,j))=="timeint") var(i)%time_interval=val(attribs(2,j))
+             print *,var(i)
         enddo
 
-
       end if
-     write(*,*) (i,'>',trim(data(i)),'<',i=1,no_data)
+     !write(*,*) (j,'>',trim(data(j)),'<',j=1,no_data)
+
      if (.not. xml_ok(info)) exit
-   enddo
- endif
- call xml_close(info)
+    enddo !
+  endif
+  call xml_close(info)
   end subroutine
 
 

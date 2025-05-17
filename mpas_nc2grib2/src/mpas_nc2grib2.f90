@@ -202,7 +202,7 @@ program mpas_nc2grib2
      end do
 
      ! Inicialize parameter definitions
-     call init_parm2 (conftable)
+     call init_parm (conftable)
      allocate (check_var(0:svar))
      allocate (lon(0:nlon-1))
      allocate (lat(0:nlat-1))
