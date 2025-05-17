@@ -1,0 +1,28 @@
+# Naive makefile for the simple test program "tstparse"
+#
+# $Id: makefile,v 1.6 2006/06/09 10:30:30 arjenmarkus Exp $
+#
+# Coarse test for the XML-Fortran module
+#
+# Note:
+# You may need to change the name of the Fortran compiler
+# and the compile options
+#
+#FC	=	f90
+#FC	=	lf95
+#FC	=	ifort
+#FOPT	=	-c
+FC	=	gfortran
+FOPT	=	-c
+XMLPARSEF=./shared/xml_fortran/xmlparse.f90
+all		:	xmlparse.o #tstparse xmlreader
+
+
+xmlparse.o	:	$(XMLPARSEF)
+	$(FC) $(FOPT) $(XMLPARSEF)
+
+
+clean:	
+	rm -f *.o
+	rm -f *.mod
+	rm -f *.a

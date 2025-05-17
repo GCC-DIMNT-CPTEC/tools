@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<dataroot>
+    <product>
+        <definition def="0" title="Product definition template 4.0 - analysis or forecast at a horizontal level or in a horizontal layer at a point in time" />
+        <definition def="8" title="Product definition template 4.8 - average, accumulation and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous> time interval">
+    </product>
+    <nc2grib2>
+        <element NCVar="t2m" cfVarName="t2m" Name="2 metre temperature" >
+            <template def="0">
+                    <id discipline="0" />
+                    <id parameterCategory="0" />
+                    <id parameterNumber="0" />
+                    <id typeOfFirstFixedSurface ="103" />
+                    <id scaleFactorOfFirstFixedSurface ="0" />
+                    <id scaledValueOfFirstFixedSurface = "2"/>
+                </template>
+        </element>
+        <element NCVar="rainnc" cfVarName="ncpcp" Name="Large scale precipitation (non-convective) (kg m-2) (Table 4.2.0.1.table)" >
+            <template def="8">
+                    <id discipline="0" />
+                    <id parameterCategory="0" />
+                    <id parameterNumber="0" />
+                    <id typeOfFirstFixedSurface ="103" />
+                    <id scaleFactorOfFirstFixedSurface ="0" />
+                    <id scaledValueOfFirstFixedSurface = "2"/>
+                    <id timeint = "-1"/>
+                </template>
+            </element>
+    </nc2grib2>
+
+</dataroot>

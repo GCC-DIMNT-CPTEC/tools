@@ -1,0 +1,32 @@
+NC_Name,cfVarName,Templete, Discipline,Category,ParNumber,tflevel,sValueFFS,sFactorFFS,timeint,Varname
+t2m             ,t2m  ,  0,          0,       0,        0,    103,        2,         0,      0,2 metre temperature
+th2m            ,pt2  ,  0,          0,       0,        2,    103,        2,         0,      0,2-meter potential temperature
+q2              ,sh2  ,  0,          0,       1,        0,    103,        2,         0,      0,2 metre specific humidity
+u10             ,u10  ,  0,          0,       2,        2,    103,       10,         0,      0,10 metre U wind component
+v10             ,v10  ,  0,          0,       2,        3,    103,       10,         0,      0,10 metre V wind component
+mslp            ,prmsl,  0,          0,       3,        1,    101,        0,         0,      0,Pressure reduced to MSL  (Pa)
+surface_pressure,sp   ,  0,          0,       3,        0,      1,        0,         0,      0,Surface pressure (PA)
+zgeo_isobaric   ,gh   ,  0,          0,       3,        5,    100,        0,         0,      0,Geopotential height (gpm)
+t2_isobaric     ,t    ,  0,          0,       0,        0,    100,        0,         0,      0,Temperature (K)
+rh2_isobaric    ,rh   ,  0,          0,       1,        1,    100,        0,         0,      0,Relative humidity  (%)
+uvel_isobaric   ,u    ,  0,          0,       2,        2,    100,        0,         0,      0,u-component of wind  (m s-1)
+vvel_isobaric   ,v    ,  0,          0,       2,        3,    100,        0,         0,      0,v-component of wind  (m s-1)
+wvel_isobaric   ,wr   ,  0,          0,       2,        9,    100,        0,         0,      0,Geometric vertical velocity
+rainnc          ,ncpcp,  8,          0,       1,        9,      1,        0,         0,    -1,Large scale precipitation (non-convective) (kg m-2)
+rainc           ,acpcp,  8,          0,       1,       10,      1,        0,         0,    -1,Convective precipitation (kg m-2)
+lh              ,slhf ,  0,          0,       0,       10,      1,        0,         0,     0,Surface latent heat flux w/kg
+olrtoa          ,ulwrf,  0,          0,       5,        4,      1,        0,         0,     0,Upward long-wave radiation flux (W m-2)
+precipw         ,pwat ,  0,          0,       1,        3,      1,        0,         0,     0,Precipitable water (kg m-2)
+cape            ,cape ,  0,          0,       7,        6,      1,        0,         0,     0,Convective available potential energy (J/kg)
+cin             ,cin  ,  0,          0,       7,        7,      1,        0,         0,     0,Convective inhibition (J/kg)
+#---------------------------------------------------------------------------------------------
+#time_interval : Time Interval in hours in case of accumulated or mean parameter or template
+#                Note: Use -1 in case of time_interval from start time to forecast time
+#---------------------------------------------------------------------------------------------
+
+#'cape' = {
+#	 discipline = 0 ;
+#	 parameterCategory = 7 ;
+#	 parameterNumber = 6 ;
+#	 typeOfFirstFixedSurface = 1 ;
+#	 typeOfSecondFixedSurface = 8 ;

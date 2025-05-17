@@ -1,0 +1,120 @@
+NC_Name,cfVarName,Discipline,Category,Parameter Number,tflevel,Varname
+t2m             ,t2m  , 0,0,0,103,"2 metre temperature"        #scaleFactorOfFirstFixedSurface = 0  scaledValueOfFirstFixedSurface = 2 ;
+u10             ,u10  , 0,2,2,103,"10 metre U wind component"  #scaledValueOfFirstFixedSurface = 10 scaleFactorOfFirstFixedSurface = 0,103 ,"10 metre U wind component"
+v10             ,v10  , 0,2,3,103,"10 metre V wind component"  #scaledValueOfFirstFixedSurface = 10 scaleFactorOfFirstFixedSurface = 0 ;
+mslp            ,prmsl, 0,3,1,101,"Pressure reduced to MSL  (Pa)"
+surface_pressure,sp   , 0,3,0,  1,"Surface pressure (PA)"
+sst             ,sst  ,10,3, 0, 1,"Sea surface temperature"
+geoph           ,gh   , 0,3,5,100,"Geopotential height  (gpm)" 
+height          ,dist , 0,3,6,100,"Geometric height (m)" 
+temperature     ,t    , 0,0,0,100,"Temperature (K)"  
+spechum         ,q    , 0,1,0,100,"Specific humidity  (kg kg-1)"
+relhum          ,rh   , 0,1,1,100,"Relative humidity  (%)"
+uzonal          ,u    , 0,2,2,100,"u-component of wind  (m s-1)"
+umeridional     ,v    , 0,2,3,100,"v-component of wind  (m s-1)"
+omega           ,w    , 0,2,8,100,"Vertical velocity (pressure)  (Pa s-1)"
+w               ,wr   , 0,2,9,100,"Geometric vertical velocity"
+#               ,rwmr , 0,1,24, 0,"Rain mixing ratio"
+#qi 'Ice mixing ratio (kg/kg) 
+#,nswrt,0,4,1,0,"Net short-wave radiation flux (top of atmosphere)"	}
+#,dswrf,0,4 ,7,0,"Downward short-wave radiation flux"
+#,nswrf,0,4,9,0,"Net short wave radiation flux"
+#,nswrfcs,0,4,11,0 "Net short-wave radiation flux, clear sky"
+#,uswrf,0,4,8,0 "Upward short-wave radiation flux"
+#,Net short-wave radiation flux, clear sky
+#,nswrfcs,0 ,4 11,0,"Net short-wave radiation flux, clear sky"
+#float aclwdnb(time, latitude, longitude) ;
+#float acswdnb(time, latitude, longitude) ;
+#		acswdnb:long_name = "accumulated all-sky downward surface shortwave radiation flux" ;
+#		acswdnb:units = "W m^{-2}" ;
+#		acswdnb:_FillValue = 9.96921e+36f ;
+#		acswdnb:missing_value = 9.96921e+36f ;
+#	float acswdnbc(time, latitude, longitude) ;
+#		acswdnbc:long_name = "accumulated clear-sky downward surface shortwave radiation flux" ;
+#		acswdnbc:units = "W m^{-2}" ;
+#		acswdnbc:_FillValue = 9.96921e+36f ;
+#		acswdnbc:missing_value = 9.96921e+36f ;
+#	float acswdnt(time, latitude, longitude) ;
+#		acswdnt:long_name = "accumulated all-sky downward top-of-atmosphere shortwave radiation flux" ;
+#		acswdnt:units = "W m^{-2}" ;
+#		acswdnt:_FillValue = 9.96921e+36f ;
+#		acswdnt:missing_value = 9.96921e+36f ;
+#	float acswdntc(time, latitude, longitude) ;
+#		acswdntc:long_name = "accumulated clear-sky downward top-of-atmosphere shortwave radiation flux" ;
+#		acswdntc:units = "W m^{-2}" ;
+#		acswdntc:_FillValue = 9.96921e+36f ;
+#		acswdntc:missing_value = 9.96921e+36f ;
+#	float acswupb(time, latitude, longitude) ;
+#		acswupb:long_name = "accumulated all-sky upward surface shortwave radiation flux" ;
+#		acswupb:units = "W m^{-2}" ;
+#		acswupb:_FillValue = 9.96921e+36f ;
+#		acswupb:missing_value = 9.96921e+36f ;
+#	float acswupbc(time, latitude, longitude) ;
+#		acswupbc:long_name = "accumulated clear-sky upward surface shortwave radiation flux" ;
+#		acswupbc:units = "W m^{-2}" ;
+#		acswupbc:_FillValue = 9.96921e+36f ;
+#		acswupbc:missing_value = 9.96921e+36f ;
+#	float acswupt(time, latitude, longitude) ;
+#		acswupt:long_name = "accumulated all-sky upward top-of-atmosphere shortwave radiation flux" ;
+#		acswupt:units = "W m^{-2}" ;
+#		acswupt:_FillValue = 9.96921e+36f ;
+#		acswupt:missing_value = 9.96921e+36f ;
+#	float acswuptc(time, latitude, longitude) ;
+#		acswuptc:long_name = "accumulated clear-sky upward top-of-atmosphere shortwave radiation flux" ;
+#		acswuptc:units = "W m^{-2}" ;
+#		acswuptc:_FillValue = 9.96921e+36f ;
+#		acswuptc:missing_value = 9.96921e+36f ;
+#		aclwdnb:long_name = "accumulated all-sky downward surface longwave radiation flux" ;
+#		aclwdnb:units = "W m^{-2}" ;
+#		aclwdnb:_FillValue = 9.96921e+36f ;
+#		aclwdnb:missing_value = 9.96921e+36f ;
+#	float aclwdnbc(time, latitude, longitude) ;
+#		aclwdnbc:long_name = "accumulated clear-sky downward surface longwave radiation flux" ;
+#		aclwdnbc:units = "W m^{-2}" ;
+#		aclwdnbc:_FillValue = 9.96921e+36f ;
+#		aclwdnbc:missing_value = 9.96921e+36f ;
+#	float aclwdnt(time, latitude, longitude) ;
+#		aclwdnt:long_name = "accumulated all-sky downward top-of-the-atmosphere longwave radiation flux" ;
+#		aclwdnt:units = "W m^{-2}" ;
+#		aclwdnt:_FillValue = 9.96921e+36f ;
+#		aclwdnt:missing_value = 9.96921e+36f ;
+#	float aclwdntc(time, latitude, longitude) ;
+#		aclwdntc:long_name = "accumulated clear-sky downward top-of-the-atmosphere longwave radiation flux" ;
+#		aclwdntc:units = "W m^{-2}" ;
+#		aclwdntc:_FillValue = 9.96921e+36f ;
+#		aclwdntc:missing_value = 9.96921e+36f ;
+#	float aclwupb(time, latitude, longitude) ;
+#		aclwupb:long_name = "accumulated all-sky upward surface longwave radiation flux" ;
+#		aclwupb:units = "W m^{-2}" ;
+#
+#float q2(time, latitude, longitude) ;
+#	q2:long_name = "2-meter specific humidity" ;
+#	q2:units = "kg kg^{-1}" ;
+#	q2:_FillValue = 9.96921e+36f ;
+#	q2:missing_value = 9.96921e+36f ;
+#float rainnc(time, latitude, longitude) ;
+#		rainnc:long_name = "accumulated total grid-scale precipitation" ;
+#		rainnc:units = "mm" ;
+#		rainnc:_FillValue = 9.96921e+36f ;
+#		rainnc:missing_value = 9.96921e+36f ;
+#	float rainc(time, latitude, longitude) ;
+#		rainc:long_name = "accumulated convective precipitation" ;
+#		rainc:units = "mm" ;
+#		rainc:_FillValue = 9.96921e+36f ;
+#		rainc:missing_value = 9.96921e+36f ;
+#	float t2m(time, latitude, longitude) ;
+#		t2m:long_name = "2-meter temperature" ;
+#		t2m:units = "K" ;
+#		t2m:_FillValue = 9.96921e+36f ;
+#		t2m:missing_value = 9.96921e+36f ;
+#d2m,d2m,0,0,6,103,"2 metre dewpoint temperature" # scaleFactorOfFirstFixedSurface = 0 scaledValueOfFirstFixedSurface = 2 ;
+#	float rainnc(time, latitude, longitude) ;
+#		rainnc:long_name = "accumulated total grid-scale precipitation" ;
+#		rainnc:units = "mm" ;
+#		rainnc:_FillValue = 9.96921e+36f ;
+#		rainnc:missing_value = 9.96921e+36f ;
+#	float rainc(time, latitude, longitude) ;
+#		rainc:long_name = "accumulated convective precipitation" ;
+#		rainc:units = "mm" ;
+#		rainc:_FillValue = 9.96921e+36f ;
+#		rainc:missing_value = 9.96921e+36f ;
