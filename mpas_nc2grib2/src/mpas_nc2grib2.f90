@@ -17,12 +17,12 @@ program mpas_nc2grib2
 ! 2024-07-07  V1.0 SHSF: Original version
 ! 2024-11-06  V1.1 SHSF: Check of sequence of dimension (matrix shape) in netcdf was implemented
 !                      : for 2 cases: xyzt and zxyt
-
+! 2025-05-10  V2.0-beta: New approach: configuration table nc2grib2.csv was replaced with nc2grib.2.xml
   use netcdf
   use stringflib
   use datelib
   use mgrib_interface
-  use mgrib_tables, only :init_parm,var,svar=>nvar,get_cfVarName_index,get_ncVarName_index
+  use mgrib_tables, only :init_parm,init_parm2, var,svar=>nvar,get_cfVarName_index,get_ncVarName_index
   use metlib, only :rseca, saturation_Adiabatic,temperature_lapse_rate,w2omega,tvirtw_kelvin
   use mgrib_tables
   implicit none
@@ -87,7 +87,8 @@ program mpas_nc2grib2
   !-----------
   
    call get_parameter(namearg,arg,nargs)
-   conftable="nc2grib.2.csv"
+   !conftable="nc2grib.2.csv"
+   conftable="nc2grib.2.xml"
    verbose=0                                                                          !
       do i=1, nargs 
         select case (namearg(i))
@@ -114,9 +115,9 @@ program mpas_nc2grib2
 	!
       end do
        print *,"|--------------------------------------------------------------+"
-       print *,"| mpas_nc2grib2.x                                              |"
+       print *,"| mpas_nc2grib2-b.x                                            |"
        print *,"|--------------------------------------------------------------+"
-       print *,"| MCTI-INPE (2024-11-06) V. 1.1                                |"
+       print *,"| MCTI-INPE (2025-11-06) V. 2.0 beta                           |"
        print *,"|--------------------------------------------------------------+"
 
       if (x1*x2*x3==0) then
@@ -202,7 +203,7 @@ program mpas_nc2grib2
      end do
 
      ! Inicialize parameter definitions
-     call init_parm (conftable)
+     call init_parm2 (conftable)
      allocate (check_var(0:svar))
      allocate (lon(0:nlon-1))
      allocate (lat(0:nlat-1))

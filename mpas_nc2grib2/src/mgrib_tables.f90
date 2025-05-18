@@ -91,7 +91,6 @@ subroutine init_parm2(parm_table)
 
    i=0
    op=.false.
-   print *,"initparm2****"
    call getenv("NC2GRIB_DIR",nc2grib_dir)
    if (len_trim(nc2grib_dir)==0) then
      print *,"Error! NC2GRIB_DIR environment variable not found"
@@ -131,7 +130,8 @@ subroutine init_parm2(parm_table)
                 if (trim(attribs(1,j))=="cfVarName") var(i)%cfVarName=trim(attribs(2,j))
                 if (trim(attribs(1,j))=="Name") var(i)%VarName=trim(attribs(2,j))
             enddo
-            write(*,'("var(",i3.3,") -> ",3(" [",A,"]"))')i,trim(var(i)%ncVarName),trim(var(i)%cfVarname),trim(var(i)%Varname)
+          !write(*,'("var(",i3.3,") -> ",3(" [",A,"]"))')i,trim(var(i)%ncVarName),trim(var(i)%cfVarname),trim(var(i)%Varname)
+            nvar=i
          end if
       end if
 
@@ -141,7 +141,6 @@ subroutine init_parm2(parm_table)
             do j=1,no_attribs
                 if(trim(attribs(1,j))=="def") var(i)%Template=val(attribs(2,1))
             end do
-            print *,"template=",var(i)%Template
             op=.true.
         else
             op=.false.
@@ -151,19 +150,19 @@ subroutine init_parm2(parm_table)
 
       if ((var(i)%template==0).and.(op)) then
         do j=1,no_attribs
-           write(*,*) i,"< template 4.0 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
+          ! write(*,*) i,"< template 4.0 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
           if (trim(attribs(1,j))=="discipline") var(i)%discipline=val(attribs(2,j))
           if (trim(attribs(1,j))=="parameterCategory") var(i)%pCat=val(attribs(2,j))
           if (trim(attribs(1,j))=="parameterNumber") var(i)%pNum=val(attribs(2,j))
           if (trim(attribs(1,j))=="typeOfFirstFixedSurface") var(i)%tflevel=val(attribs(2,j))
           if (trim(attribs(1,j))=="scaleFactorOfFirstFixedSurface") var(i)%sFactor_FFS=val(attribs(2,j))
           if (trim(attribs(1,j))=="scaledValueOfFirstFixedSurface") var(i)%sValue_FFS=val(attribs(2,j))
-          print *,var(i)
+          nvar=i
         enddo
          var(i)%time_interval=0
       elseif((var(i)%template==8).and.(op)) then
          do j=1,no_attribs
-             write(*,*) i,"< template 4.8 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
+           !  write(*,*) i,"< template 4.8 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
              if (trim(attribs(1,j))=="discipline") var(i)%discipline=val(attribs(2,j))
              if (trim(attribs(1,j))=="parameterCategory") var(i)%pCat=val(attribs(2,j))
              if (trim(attribs(1,j))=="parameterNumber") var(i)%pNum=val(attribs(2,j))
@@ -171,7 +170,7 @@ subroutine init_parm2(parm_table)
              if (trim(attribs(1,j))=="scaleFactorOfFirstFixedSurface") var(i)%sFactor_FFS=val(attribs(2,j))
              if (trim(attribs(1,j))=="scaledValueOfFirstFixedSurface") var(i)%sValue_FFS=val(attribs(2,j))
              if (trim(attribs(1,j))=="timeint") var(i)%time_interval=val(attribs(2,j))
-             print *,var(i)
+             nvar=i
         enddo
 
       end if

@@ -11,7 +11,7 @@ SHARED=./shared
 
 # executavel
 
-NC2GRIB2   =$(BIN)mpas_nc2grib2.x
+NC2GRIB2   =$(BIN)mpas_nc2grib2-b.x
 TEST       =$(BIN)test.x
 # Programas fontes
 
