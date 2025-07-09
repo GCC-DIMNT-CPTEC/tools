@@ -115,7 +115,7 @@ program mpas_nc2grib2
 	!
       end do
        print *,"|--------------------------------------------------------------+"
-       print *,"| mpas_nc2grib2-b.x                                            |"
+       print *,"| mpas_nc2grib2.x                                              |"
        print *,"|--------------------------------------------------------------+"
        print *,"| MCTI-INPE (2025-11-06) V. 2.0 beta                           |"
        print *,"|--------------------------------------------------------------+"
@@ -134,7 +134,7 @@ program mpas_nc2grib2
        print *,"|        (Default: 0)                                          |"
        print *,"|                                                              |"
        print *,"|    -c :<Configuration table name>                            |"
-       print *,"|        (Default= nc2grib.2.csv )                             |"
+       print *,"|        (Default= nc2grib.2.xml)                              |"
        print *,"|--------------------------------------------------------------+"
 
 	stop
