@@ -42,6 +42,7 @@ program mpas_nc2grib2
   character(len=4)             ::seqdim  ! Sequence of dimensions (x,y,z etc)
   character(len=15)            ::Clat,Clon,Clev
   character(len=60)            ::time_unit
+  integer                      ::ilat,ilon,ilev,itim
   integer::nt
   integer::vv
   real :: hh
@@ -163,7 +164,7 @@ program mpas_nc2grib2
      print *, "nf90_max_name=",nf90_max_name
      do i =1,ndim
      	call check(nf90_inquire_dimension(ncid,i,dname,len=dlength))
-     	print *,">",i,trim(dname)
+     !	print *,">",i,trim(dname)
         udname=trim(UCASES(dname))
         select case(trim(udname))
 		case ('LON','LONGITUDE')
@@ -191,7 +192,9 @@ program mpas_nc2grib2
 
 		end select
      end do
-
+!------------------------------------------------     
+! Check the sequence of the coordinate variables 
+!------------------------------------------------
      do varid = 1,4
       call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
       print *,">",varid,trim(vin_name)
@@ -199,16 +202,23 @@ program mpas_nc2grib2
         select case(trim(udname))
 		case ('LON','LONGITUDE')
 			hdim(varid)="X"
+			ilon=varid
 		case ('LAT','LATITUDE')
 		    hdim(varid)="Y"
+		    ilat=varid
  		case ('LEV','LEVEL')
 		      hdim(varid)="Z"
+		      ilev=varid
 		case ('TIME')
 		      hdim(varid)="T"
+		      itim=varid
         end select
     end do
     print *,":MPAS_NC2GRIB2: Coordinate sequence = [ ",hdim(1:4)," ]"
+    
+     !------------------------------------------
      ! Check the sequence xyzt in the variables
+     !------------------------------------------
      do varid = 5,nvar
       call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
       print *,"vin_name=",varid, trim(vin_name)
@@ -247,9 +257,7 @@ program mpas_nc2grib2
  !----------
  print *,":MPAS_NC2GRIB2: Reading ",trim(clon)
  !*** Read Lon ***
-  call check( nf90_inq_dimid(ncid, trim(clon),dimid))
-  print *,"dimid=",dimid,cdim(dimid),nlon
-  call check(nf90_get_var(ncid, dimid, lon) )
+  call check(nf90_get_var(ncid, ilon, lon) )
   print *,":MPAS_NC2GRIB2: Reading Longitudes.. "
   ! Recalculate longitudes from boders to the center of grid points
    dlon=(lon(nlon-1)-lon(0))/(nlon-1)
@@ -264,8 +272,8 @@ program mpas_nc2grib2
   
   
  !*** Read Lat ***
-  call check( nf90_inq_dimid(ncid, trim(clat),dimid))
-  call check(nf90_get_var(ncid, dimid, lat) )
+  !call check( nf90_inq_dimid(ncid, trim(clat),dimid))
+  call check(nf90_get_var(ncid, ilat, lat) )
 
    ! Recalculate latitudes from boders to the center of grid points
    dlat=(lat(nlat-1)-lat(0))/(nlat-1)
@@ -280,8 +288,8 @@ program mpas_nc2grib2
   if (verbose>0) print *,":MPAS_NC2GRIB2: nlat=",nlat,"lat = [", lati,":",latf,":",dlat,"]"
 
  !*** Read Lev ***
-  call check( nf90_inq_dimid(ncid, trim(clev),dimid))
-  call check(nf90_get_var(ncid, dimid, lev) )
+  !call check( nf90_inq_dimid(ncid, trim(clev),dimid))
+  call check(nf90_get_var(ncid, ilev, lev) )
   if (verbose>0) print *,":MPAS_NC2GRIB2: nlev=",nlev,"lev = [", lev(0),"-",lev(nlev-1),"]"
 
   if (verbose>0) then
