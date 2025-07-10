@@ -37,7 +37,8 @@ program mpas_nc2grib2
   integer :: ndims
   integer,dimension(6)::dimids
   integer::nlat,nlon,nlev
-  character(len=1),dimension(4)::cdim    ! Identification of dimension (x,y,z, etc)
+  character(len=1),dimension(4)::cdim    ! Identification of the dimensions (x,y,z, etc)
+  character(len=1),dimension(4)::hdim    ! Identification of the dimensions (header)
   character(len=4)             ::seqdim  ! Sequence of dimensions (x,y,z etc)
   character(len=15)            ::Clat,Clon,Clev
   character(len=60)            ::time_unit
@@ -57,7 +58,7 @@ program mpas_nc2grib2
   real *8                              ::lonf,loni,dlon,latf,lati,dlat
 
 
-  CHARACTER(LEN=15)                ::dname
+  CHARACTER(LEN=15)                ::dname,udname
   character(len=nf90_max_name)     ::vin_name
   character(len=254)               ::longname
   character(len=254)               ::conftable 
@@ -162,21 +163,22 @@ program mpas_nc2grib2
      print *, "nf90_max_name=",nf90_max_name
      do i =1,ndim
      	call check(nf90_inquire_dimension(ncid,i,dname,len=dlength))
-
-        select case(trim(dname))
-		case ('lon','LON','longitude')
+     	print *,">",i,trim(dname)
+        udname=trim(UCASES(dname))
+        select case(trim(udname))
+		case ('LON','LONGITUDE')
 			nlon=dlength
 			clon=trim(dname)
 			cdim(i)="X"
-		case ('lat','LAT','latitude')
+		case ('LAT','LATITUDE')
 			nlat=dlength
 			clat=trim(dname)
             cdim(i)="Y"
- 		case ('lev','LEV','level')
+ 		case ('LEV','LEVEL')
 			nlev=dlength
 			clev=trim(dname)
             cdim(i)="Z"
-		case ('time','TIME')
+		case ('TIME')
 			nt=dlength
 			cdim(i)="T"
 			call check(nf90_get_att(ncid, i, "units", time_unit))
@@ -186,15 +188,34 @@ program mpas_nc2grib2
 			if (verbose>0) print *,":MPAS_NC2GRIB2: ref_date=",grdate(ref_date)
 		case default
 			print *, ":MPAS_NC2GRIB2: ERROR: nc_check for dimensions!"; stop
+
 		end select
      end do
+
+     do varid = 1,4
+      call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
+      print *,">",varid,trim(vin_name)
+        udname=trim(UCASES(vin_name))
+        select case(trim(udname))
+		case ('LON','LONGITUDE')
+			hdim(varid)="X"
+		case ('LAT','LATITUDE')
+		    hdim(varid)="Y"
+ 		case ('LEV','LEVEL')
+		      hdim(varid)="Z"
+		case ('TIME')
+		      hdim(varid)="T"
+        end select
+    end do
+    print *,":MPAS_NC2GRIB2: Coordinate sequence = [ ",hdim(1:4)," ]"
      ! Check the sequence xyzt in the variables
      do varid = 5,nvar
       call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
-
+      print *,"vin_name=",varid, trim(vin_name)
       if (dimids(4)>0) then
         seqdim=""
         do i=1,4
+          print *,i,dimids(i),">",cdim(dimids(i))
           seqdim=trim(seqdim)//cdim(dimids(i))
         end do
         print *,":MPAS_NC2GRIB2: Matrix shape = [ ",trim(seqdim)," ]"
@@ -204,6 +225,8 @@ program mpas_nc2grib2
 
      ! Inicialize parameter definitions
      call init_parm2 (conftable)
+
+
      allocate (check_var(0:svar))
      allocate (lon(0:nlon-1))
      allocate (lat(0:nlat-1))
@@ -222,11 +245,12 @@ program mpas_nc2grib2
  !-----------
  ! Read DATA
  !----------
-
+ print *,":MPAS_NC2GRIB2: Reading ",trim(clon)
  !*** Read Lon ***
   call check( nf90_inq_dimid(ncid, trim(clon),dimid))
+  print *,"dimid=",dimid,cdim(dimid),nlon
   call check(nf90_get_var(ncid, dimid, lon) )
-
+  print *,":MPAS_NC2GRIB2: Reading Longitudes.. "
   ! Recalculate longitudes from boders to the center of grid points
    dlon=(lon(nlon-1)-lon(0))/(nlon-1)
    dlon=round(dlon,4)

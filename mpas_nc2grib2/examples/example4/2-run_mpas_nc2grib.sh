@@ -32,7 +32,7 @@ for fff in 000 ; do
    if [ -f "$filein" ]; then
       ls -ltr $filein
       echo "mpas_nc2grib2.x -i "$filein" -o "$fileout" -s "$yy0$mm0$dd0$hh0" -f "$fff" -v 3"
-      #mpas_nc2grib2.x -i $filetmp -o $fileout -s $yy0$mm0$dd0$hh0 -f $fff -v 3
+      $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $yy0$mm0$dd0$hh0 -f $fff -v 3
    else
       echo "ERROR!: File not found"
       echo $filein
