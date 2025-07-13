@@ -113,7 +113,7 @@ module mgrib_interface
 	!---------
 	call codes_set(igrib,'centre',46)
 	!subcenter
-	!tableVersion9
+	!call codes_set(igrib,'masterTablesVersionNumber',28)
 	!localTableVersion
 	!significanceOfReferenceTime
 	call codes_set(igrib,'date',grib_def%idate)

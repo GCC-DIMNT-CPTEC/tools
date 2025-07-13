@@ -1260,4 +1260,57 @@ function str_clean(a,b);character(len=256)::str_clean
 
 end function
 
+!------------------------------------------------------------------------------
+! color_text |returns a colored text for linux terminal (xwindows)      | SHSF
+!-----------------------------------------------------------------------------
+! Given a color code and text and if the text is bold or not 
+!, it returns a colored text for linux terminal (xwindows)
+! Usege: 
+!   print *, color_text("My text", color, bold)
+! 
+!   color: 
+!
+!   30 -> 39  normal color code  
+!   40 -> 47  background color 
+!   90 -> 97  light color 
+!
+!  bold = .true, or .false.
+!
+!  Some colors
+!    30 - Black
+!    31 - Red
+!    32 - green
+!    33 - Brow/Orange
+!    34 - Blue
+!    35 - Purple
+!    35 - Cyna
+!    27  -Light gray
+!-------------------------------------------------------------------------------
+function color_text(text,color,bold);character(len=1024)::color_text
+		!Interface
+		integer,         intent(in)::color
+		character(len=*),intent(in)::text
+		logical,         intent(in)::bold
+		!-----
+		!Local
+		character(len=2)::c
+		!---
+		
+		write (c,'(i2)')color
+		if (.not.bold) then  
+		color_text=achar(27)//'[0;'//c//'m '//trim(text)//achar(27)//'[0m'
+		else
+		color_text=achar(27)//'[1;'//c//'m '//trim(text)//achar(27)//'[0m'
+		end if 
+	end function 
+	
+function color(colorname); integer::color
+	character(len=*)::colorname
+	color=30
+	if(colorname=="red") color=31
+	if(colorname=="green") color=32
+	if(colorname=="orange") color=33
+	if(colorname=="blue") color=34
+	if(colorname=="purple") color=35
+end function
 end module stringflib

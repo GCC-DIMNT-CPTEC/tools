@@ -18,6 +18,7 @@ program mpas_nc2grib2
 ! 2024-11-06  V1.1 SHSF: Check of sequence of dimension (matrix shape) in netcdf was implemented
 !                      : for 2 cases: xyzt and zxyt
 ! 2025-05-10  V2.0-beta: New approach: configuration table nc2grib2.csv was replaced with nc2grib.2.xml
+! 2025-07-01  Improviment: Check of the coordinated variables sequence were included
   use netcdf
   use stringflib
   use datelib
@@ -28,15 +29,15 @@ program mpas_nc2grib2
   implicit none
 
   ! This will be the netCDF ID for the file and data variable.
-  integer ::ncid   !NetCDF ID, from a previous call to NF90_OPEN or NF90_CREATE.
-  integer ::varid
-  integer ::dimid
-  integer::ndim,nvar
-  character(len=1024)::  name
-  integer  :: xtype, len, attnum
-  integer :: ndims
+  integer  ::ncid   !NetCDF ID, from a previous call to NF90_OPEN or NF90_CREATE.
+  integer  ::varid
+  integer  ::dimid
+  integer  ::ndim,nvar
+  integer  ::xtype, len, attnum
+  integer  ::ndims
+  integer  ::nlat,nlon,nlev
   integer,dimension(6)::dimids
-  integer::nlat,nlon,nlev
+  character(len=1024) ::  name
   character(len=1),dimension(4)::cdim    ! Identification of the dimensions (x,y,z, etc)
   character(len=1),dimension(4)::hdim    ! Identification of the dimensions (header)
   character(len=4)             ::seqdim  ! Sequence of dimensions (x,y,z etc)
@@ -56,7 +57,7 @@ program mpas_nc2grib2
   integer                              :: ifct
   real                                 :: P, Tv
   integer                              :: step
-  real *8                              ::lonf,loni,dlon,latf,lati,dlat
+  real *8                              :: lonf,loni,dlon,latf,lati,dlat
 
 
   CHARACTER(LEN=15)                ::dname,udname
@@ -64,7 +65,7 @@ program mpas_nc2grib2
   character(len=254)               ::longname
   character(len=254)               ::conftable 
   INTEGER                          ::dlength
-  character (len = 1024)           ::FILE_NAME
+  character (len = 1024)           ::FILE_NAME,txt
   character(LEN=8)                 ::ymd
   integer*8                        ::iymd
 
@@ -89,7 +90,6 @@ program mpas_nc2grib2
   !-----------
   
    call get_parameter(namearg,arg,nargs)
-   !conftable="nc2grib.2.csv"
    conftable="nc2grib.2.xml"
    verbose=0                                                                          !
       do i=1, nargs 
@@ -158,10 +158,14 @@ program mpas_nc2grib2
      print *,":MPAS_NC2GRIB2: Input filename = ", trim(FILE_NAME)
      call check( nf90_open(FILE_NAME, NF90_NOWRITE, ncid) )
      call check( nf90_inquire(ncid,ndim,nvar))
-     print *,":MPAS_NC2GRIB2: ndim=",ndim
-     print *,":MPAS_NC2GRIB2: ncid=",ncid
-     print *,":MPAS_NC2GRIB2: nvar=",nvar
-     print *, "nf90_max_name=",nf90_max_name
+     if (verbose>0) print *,":MPAS_NC2GRIB2: ndim=",ndim
+     if (verbose>0) print *,":MPAS_NC2GRIB2: ncid=",ncid
+     if (verbose>0) print *,":MPAS_NC2GRIB2: nvar=",nvar
+     if (verbose>0) print *,":MPAS_NC2GRIB2:nf90_max_name=",nf90_max_name
+
+     !-----------------------------------------
+     ! search for the Coordinates informations
+     !----------------------------------------
      do i =1,ndim
      	call check(nf90_inquire_dimension(ncid,i,dname,len=dlength))
      !	print *,">",i,trim(dname)
@@ -193,11 +197,11 @@ program mpas_nc2grib2
 		end select
      end do
 !------------------------------------------------     
-! Check the sequence of the coordinate variables 
+! Check of the coordinate variable sequence
+! Supposedly the First 4 Variables
 !------------------------------------------------
      do varid = 1,4
       call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
-      print *,">",varid,trim(vin_name)
         udname=trim(UCASES(vin_name))
         select case(trim(udname))
 		case ('LON','LONGITUDE')
@@ -214,18 +218,18 @@ program mpas_nc2grib2
 		      itim=varid
         end select
     end do
-    print *,":MPAS_NC2GRIB2: Coordinate sequence = [ ",hdim(1:4)," ]"
+    if (verbose>0) print *,":MPAS_NC2GRIB2: Coordinate sequence = [ ",hdim(1:4)," ]"
     
-     !------------------------------------------
-     ! Check the sequence xyzt in the variables
-     !------------------------------------------
+     !---------------------------------------------------------------
+     ! Check the sequence xyzt inside of the meteorological variables
+     ! starts on variable 5
+     !---------------------------------------------------------------
      do varid = 5,nvar
       call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
-      print *,"vin_name=",varid, trim(vin_name)
+      !print *,"vin_name=",varid, trim(vin_name)
       if (dimids(4)>0) then
         seqdim=""
         do i=1,4
-          print *,i,dimids(i),">",cdim(dimids(i))
           seqdim=trim(seqdim)//cdim(dimids(i))
         end do
         print *,":MPAS_NC2GRIB2: Matrix shape = [ ",trim(seqdim)," ]"
@@ -255,10 +259,9 @@ program mpas_nc2grib2
  !-----------
  ! Read DATA
  !----------
- print *,":MPAS_NC2GRIB2: Reading ",trim(clon)
  !*** Read Lon ***
   call check(nf90_get_var(ncid, ilon, lon) )
-  print *,":MPAS_NC2GRIB2: Reading Longitudes.. "
+  if (verbose>0) print *,":MPAS_NC2GRIB2: Reading Longitudes.. "
   ! Recalculate longitudes from boders to the center of grid points
    dlon=(lon(nlon-1)-lon(0))/(nlon-1)
    dlon=round(dlon,4)
@@ -272,9 +275,9 @@ program mpas_nc2grib2
   
   
  !*** Read Lat ***
-  !call check( nf90_inq_dimid(ncid, trim(clat),dimid))
-  call check(nf90_get_var(ncid, ilat, lat) )
 
+  call check(nf90_get_var(ncid, ilat, lat) )
+  if (verbose>0) print *,":MPAS_NC2GRIB2: Reading Latitudes.. "
    ! Recalculate latitudes from boders to the center of grid points
    dlat=(lat(nlat-1)-lat(0))/(nlat-1)
    dlat=round(dlat,4)
@@ -288,7 +291,7 @@ program mpas_nc2grib2
   if (verbose>0) print *,":MPAS_NC2GRIB2: nlat=",nlat,"lat = [", lati,":",latf,":",dlat,"]"
 
  !*** Read Lev ***
-  !call check( nf90_inq_dimid(ncid, trim(clev),dimid))
+
   call check(nf90_get_var(ncid, ilev, lev) )
   if (verbose>0) print *,":MPAS_NC2GRIB2: nlev=",nlev,"lev = [", lev(0),"-",lev(nlev-1),"]"
 
@@ -297,6 +300,8 @@ program mpas_nc2grib2
 	print *,":MPAS_NC2GRIB2: Selected variables : svar=",svar
   end if 
   call check( nf90_inquire(ncid,ndim,nvar))
+
+  !-------------------------------
 
   do varid = 5,nvar
     vin_name=""
@@ -433,7 +438,8 @@ program mpas_nc2grib2
              call write_grib2(var(i),vxyzt(i,:,:,0,0),0.0,step)
            end if
       else
-         print *,i,"not found",var(i)
+          txt=trim(var(i)%cfVarName)//"-"//trim(var(i)%VarName)
+        print *,i,trim(txt)//trim(color_text(": NOT FOUND!",31,.false.))
       end if
     end do
     !------------------------------------
@@ -449,7 +455,9 @@ program mpas_nc2grib2
              call write_grib2(var(i),vzxyt(i,0,:,:,0),0.0,step)
            end if
       else
-         print *,i,"not found",var(i)
+        txt=trim(var(i)%cfVarName)//"-"//trim(var(i)%VarName)
+        print *,i,trim(txt)//trim(color_text(": NOT FOUND!",31,.false.))
+
       end if
     end do
     !-----------------------------------
