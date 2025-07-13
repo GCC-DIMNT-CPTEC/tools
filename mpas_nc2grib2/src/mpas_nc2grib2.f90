@@ -25,7 +25,7 @@ program mpas_nc2grib2
   use mgrib_interface
   use mgrib_tables, only :init_parm,init_parm2, var,svar=>nvar,get_cfVarName_index,get_ncVarName_index
   use metlib, only :rseca, saturation_Adiabatic,temperature_lapse_rate,w2omega,tvirtw_kelvin
-  use mgrib_tables
+
   implicit none
 
   ! This will be the netCDF ID for the file and data variable.
@@ -221,8 +221,8 @@ program mpas_nc2grib2
     if (verbose>0) print *,":MPAS_NC2GRIB2: Coordinate sequence = [ ",hdim(1:4)," ]"
     
      !---------------------------------------------------------------
-     ! Check the sequence xyzt inside of the meteorological variables
-     ! starts on variable 5
+     ! Check the sequence xyzt defined in the meteorological variables
+     ! starts from variable 5
      !---------------------------------------------------------------
      do varid = 5,nvar
       call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims,dimids))
@@ -347,7 +347,7 @@ program mpas_nc2grib2
     else
        if (verbose>2) then
            call check( nf90_get_att(ncid, varid,'long_name', longname))
-          print *,varid," nc=[",trim(vin_name),"] cf=[ NONE ] --> ",trim(longname)
+          print *,varid," nc=[",trim(vin_name),"] cf=[ ",trim(color_text("IGNORED",33,.false.))," ] --> ",trim(longname)
         end if
     end if
   end do
@@ -439,7 +439,7 @@ program mpas_nc2grib2
            end if
       else
           txt=trim(var(i)%cfVarName)//"-"//trim(var(i)%VarName)
-        print *,i,trim(txt)//trim(color_text(": NOT FOUND!",31,.false.))
+          print *,i,trim(txt)//trim(color_text(": NOT FOUND!",31,.false.))
       end if
     end do
     !------------------------------------

@@ -5,6 +5,21 @@
         <definition def="8" title="Product definition template 4.8 - average, accumulation and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous> time interval">
     </product>
     <nc2grib2>
+          <element NCVar="ter" cfVarName="mterh" Name="Model terrain height" >
+            <template def="0">
+                    <id discipline="2" />
+                    <id parameterCategory="0" />
+                    <id parameterNumber="7" />
+                </template>
+        </element>
+            <element NCVar="landmask" cfVarName="lsm" Name="Land-sea mask" >
+              <template def="0">
+                    <id discipline="2" />
+                    <id parameterCategory="0" />
+                    <id parameterNumber="0" />
+                    <id typeOfFirstFixedSurface ="1" />
+                </template>
+        </element>
         <element NCVar="t2m" cfVarName="t2m" Name="2 metre temperature" >
             <template def="0">
                     <id discipline="0" />
@@ -72,31 +87,11 @@
                     <id scaleFactorOfFirstFixedSurface ="0" />
             </template>
         </element>
-        <element NCVar="sst" cfVarName="sst" Name="Sea surface temperature" >
-            <template def="0">
-                    <id discipline="10" />
-                    <id parameterCategory="3" />
-                    <id parameterNumber="0" />
-                    <id typeOfFirstFixedSurface ="1" />
-                    <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id scaleFactorOfFirstFixedSurface ="0" />
-            </template>
-        </element>
         <element NCVar="zgeo" cfVarName="gh" Name="Geopotential height (gpm)" >
             <template def="0">
                     <id discipline="0" />
                     <id parameterCategory="3" />
                     <id parameterNumber="5" />
-                    <id typeOfFirstFixedSurface ="100" />
-                    <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id scaleFactorOfFirstFixedSurface ="0" />
-            </template>
-        </element>
-        <element NCVar="height" cfVarName="dist" Name="Geometric height (m)" >
-            <template def="0">
-                    <id discipline="0" />
-                    <id parameterCategory="3" />
-                    <id parameterNumber="6" />
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
@@ -207,24 +202,22 @@
                     <id timeint = "-1"/>
                 </template>
         </element>
-        <element NCVar="hpbl" cfVarName="hpbl" Name="Planetary boundary layer height  (m)" >
+        <element NCVar="cape" cfVarName="cape" Name="Convective available potential energy" >
             <template def="0">
                     <id discipline="0" />
-                    <id parameterCategory="3" />
-                    <id parameterNumber="18" />
+                    <id parameterCategory="7" />
+                    <id parameterNumber="6" />
                     <id typeOfFirstFixedSurface ="1" />
-                    <id scaleFactorOfFirstFixedSurface ="0" />
-                    <id scaledValueOfFirstFixedSurface = "0"/>
+                    <id typeOfSecondFixedSurface = "8"/>
                 </template>
         </element>
-        <element NCVar="cd" cfVarName="cd" Name="Drag coefficient" >
+             <element NCVar="cin" cfVarName="cin" Name="Convective inhibition" >
             <template def="0">
                     <id discipline="0" />
-                    <id parameterCategory="2" />
-                    <id parameterNumber="29" />
+                    <id parameterCategory="7" />
+                    <id parameterNumber="7" />
                     <id typeOfFirstFixedSurface ="1" />
-                    <id scaleFactorOfFirstFixedSurface ="0" />
-                    <id scaledValueOfFirstFixedSurface = "0"/>
+                    <id typeOfSecondFixedSurface = "8"/>
                 </template>
         </element>
 
