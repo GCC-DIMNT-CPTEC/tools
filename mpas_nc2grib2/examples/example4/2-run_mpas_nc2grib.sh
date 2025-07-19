@@ -2,14 +2,18 @@
 #----------------------------------------------------------------------------#
 #  Convert NC to GRIB2                                                       #
 #----------------------------------------------------------------------------#
+a=`hostname`
 echo "HOST="$a
 if [[ $a == *"egeon"* ]]; then
+    echo $a
 	module load cdo-2.0.4-gcc-9.4.0-bjulvnd
 	module load netcdf-fortran
 	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
 else
 	export NC2GRIB_DIR=../..
+
 fi
+
 conf_table_name="nc2grib_v1.4.1-rc.xml"
 monandir="tc/1.4.1-rc/P1"
 sufix='x1024002L18'
