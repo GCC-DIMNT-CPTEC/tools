@@ -106,14 +106,15 @@ module mgrib_interface
 	call codes_open_file(out1,outfile,'w')
 	!call codes_grib_new_from_samples(igrib, "./sh_sfc_grib2")   !Example Sherical Hamonics - sfc grib 2
 	call codes_grib_new_from_samples(igrib,"./regular_ll_sfc_grib2")
+	call codes_set(igrib, "masterTablesVersionNumber", 28,status)
 	call codes_set(igrib,'editionNumber',grib_def%edition)
 
 	!----------
 	!section 1
 	!---------
+	print *,"Master Table Version Number=28"
 	call codes_set(igrib,'centre',46)
 	!subcenter
-	!call codes_set(igrib,'masterTablesVersionNumber',28)
 	!localTableVersion
 	!significanceOfReferenceTime
 	call codes_set(igrib,'date',grib_def%idate)
@@ -166,7 +167,7 @@ module mgrib_interface
    integer::i,j,k
    character(len=20)::stepRange
    integer          ::initStep, endStep
-        
+    call codes_set(igrib, "masterTablesVersionNumber", 28,status)
 	call codes_set(igrib,"packingType",packingType)
 	call codes_set(igrib,"productDefinitionTemplateNumber",parm_id%Template)
 	call codes_set(igrib,"discipline",parm_id%Discipline)
@@ -278,6 +279,7 @@ end subroutine
 	call codes_grib_new_from_file(rfile,igrib,iret)
 	call codes_get(igrib,"editionNumber",editionNumber,status)
 	gid%edition=editionNumber
+	call codes_set(igrib, "masterTablesVersionNumber", 28,status)
 	print *,":MGRIB_INTERFACE:OPEN_GRIB: editionNumber=",editionNumber
 
 		!Section 2
