@@ -16,9 +16,7 @@ TEST       =$(BIN)test.x
 # Programas fontes
 
 NC2GRIB2F =./src/mpas_nc2grib2.f90
-TESTF      =./src/test.f90
 MPASCONVF1 =./src/mpas_nc2grads.f90
-MGRADSINTF =./src/mgrads_interface.f90
 GRIB_PARAMETERS=./src/mgrib_tables.f90
 MGRIB      =./src/mgrib_interface.f90
 MGRADSF    =$(SHARED)/grdlib/mgrads.f90
@@ -32,8 +30,6 @@ OBJ= stringflib.o datelib.o mgrads.o metlib.o mgrib_tables.o msort.o mgrib_inter
 
 all:   $(NC2GRIB2) #$(TEST)
 
-$(TEST) : $(TESTF) stringflib.o datelib.o mgrib_tables.o xmlparse.o
-	$(F90) -o $@ $(TESTF) stringflib.o datelib.o mgrib_tables.o xmlparse.o
 $(NC2GRIB2) : $(NC2GRIB2F) $(OBJ) mgrib_interface.o msort.o stringflib.o datelib.o xmlparse.o
 	mkdir -p $(BIN)
 	$(F90) -o $@ $(NC2GRIB2F) $(OBJ) -I$(NFDIR)/include -L$(NFDIR)/lib -lnetcdff -I$(ECCODES_DIR)/include -L$(ECCODES_DIR)/lib -Wl,-rpath,$(ECCODES_DIR)/lib -leccodes_f90 -leccodes
