@@ -7,7 +7,7 @@ import os
 # Default parameter
 discipline=0
 category=0
-version='35'
+version='28'
 #version='4'
 definition_path= os.environ["ECCODES_DEFINITION_PATH"]+"/grib2/tables/"+version
 
