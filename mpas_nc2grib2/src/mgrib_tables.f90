@@ -12,6 +12,7 @@ module mgrib_tables
  type(grib_parameter_id),dimension(nvarmax)::var
  integer                                   ::psup_id ! Surface pressure index (for grib1 only) to indicate that this values must
                                                   ! be convert from hPa do Pa
+ integer::tablesVersion
  character(len=1024)::eccodes_dir
  character(len=1024)::nc2grib_dir
  contains
@@ -91,6 +92,7 @@ subroutine init_parm2(parm_table)
 
    i=0
    op=.false.
+   tablesVersion=4
    call getenv("NC2GRIB_DIR",nc2grib_dir)
    if (len_trim(nc2grib_dir)==0) then
      print *,"Error! NC2GRIB_DIR environment variable not found"
@@ -120,6 +122,13 @@ subroutine init_parm2(parm_table)
          print *,"!handel errors"
          exit
       endif
+    
+      if (tag=="settings") then 
+        if (trim(attribs(1,1))=="tablesVersion") then 
+	   tablesVersion=val(attribs(2,1))
+	   print *,"Settings: tablesVersion=",tablesVersion
+        end if 
+      end if 
 
       if ((tag=="element")) then
          if (.not.endtag) then
@@ -130,7 +139,7 @@ subroutine init_parm2(parm_table)
                 if (trim(attribs(1,j))=="cfVarName") var(i)%cfVarName=trim(attribs(2,j))
                 if (trim(attribs(1,j))=="Name") var(i)%VarName=trim(attribs(2,j))
             enddo
-          !write(*,'("var(",i3.3,") -> ",3(" [",A,"]"))')i,trim(var(i)%ncVarName),trim(var(i)%cfVarname),trim(var(i)%Varname)
+            write(*,'("var(",i3.3,") -> ",3(" [",A,"]"))')i,trim(var(i)%ncVarName),trim(var(i)%cfVarname),trim(var(i)%Varname)
             nvar=i
          end if
       end if
