@@ -2,10 +2,10 @@
 <dataroot>
     <product>
         <definition def="0" title="Product definition template 4.0 - analysis or forecast at a horizontal level or in a horizontal layer at a point in time" />
-        <definition def="8" title="Product definition template 4.8 - average, accumulation and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous> time interval"/>
+        <definition def="8" title="Product definition template 4.8 - average, accumulation and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous> time interval">
     </product>
-    
-    <tablesVersion="28"/>
+     
+    <settings tablesVersion="28"/>
 
     <nc2grib2>
         <element NCVar="t2m" cfVarName="t2m" Name="2 metre temperature" >
@@ -24,7 +24,7 @@
                     <id parameterCategory="1" />
                     <id parameterNumber="0" />
                     <id typeOfFirstFixedSurface ="103" />
-                     <id scaledValueOfFirstFixedSurface = "2"/>
+                    <id scaledValueOfFirstFixedSurface = "2"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
                 </template>
         </element>
@@ -34,7 +34,7 @@
                     <id parameterCategory="2" />
                     <id parameterNumber="2" />
                     <id typeOfFirstFixedSurface ="103" />
-                     <id scaledValueOfFirstFixedSurface = "10"/>
+                    <id scaledValueOfFirstFixedSurface = "10"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
                 </template>
         </element>
@@ -44,7 +44,7 @@
                     <id parameterCategory="2" />
                     <id parameterNumber="3" />
                     <id typeOfFirstFixedSurface ="103" />
-                     <id scaledValueOfFirstFixedSurface = "10"/>
+                    <id scaledValueOfFirstFixedSurface = "10"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
                 </template>
         </element>

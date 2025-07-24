@@ -130,8 +130,6 @@
                     <id scaleFactorOfFirstFixedSurface ="0" />
             </template>
         </element>
-
-
         <element NCVar="uzonal" cfVarName="u" Name="u-component of wind  (m s-1)" >
             <template def="0">
                     <id discipline="0" />
