@@ -58,7 +58,7 @@ module mgrib_interface
    real          ::dlat
    real          ::dlon
  end type
- 
+  integer            ::tablesVersion_default
   integer            ::rfile,igrib,out1
   integer            ::iret
   integer            ::n
@@ -77,18 +77,17 @@ module mgrib_interface
 !-----------------------------
 ! open_grib to write a grib fi
 !------------------------------
- subroutine openw_grib(grib_file,grib_def)
+ subroutine openw_grib(grib_file,grib_def,tablesVersion)
 	character(len=*),        intent(in)::grib_file
 	type(grib_interface_def),intent(in)::grib_def
-
+	integer,                 intent(in)::tablesVersion
 
 	real::ilat,ilon
 	real::dlat,dlon
 
 	character(len=1024)::outfile
 	real::flat,flon
-
-
+	tablesVersion_default=tablesVersion
     NI=grib_def%NI
     NJ=grib_def%NJ
     NK=grib_def%NK
@@ -106,13 +105,12 @@ module mgrib_interface
 	call codes_open_file(out1,outfile,'w')
 	!call codes_grib_new_from_samples(igrib, "./sh_sfc_grib2")   !Example Sherical Hamonics - sfc grib 2
 	call codes_grib_new_from_samples(igrib,"./regular_ll_sfc_grib2")
-	call codes_set(igrib, "tablesVersion", 28,status)
+	call codes_set(igrib, "tablesVersion", tablesVersion_default,status)
 	call codes_set(igrib,'editionNumber',grib_def%edition)
 
 	!----------
 	!section 1
 	!---------
-	print *,"tablesVersio=28"
 	call codes_set(igrib,'centre',46)
 	!subcenter
 	!localTableVersion
@@ -167,7 +165,7 @@ module mgrib_interface
    integer::i,j,k
    character(len=20)::stepRange
    integer          ::initStep, endStep
-    call codes_set(igrib, "tablesVersion", 28,status)
+    call codes_set(igrib, "tablesVersion", tablesVersion_default,status)
 	call codes_set(igrib,"packingType",packingType)
 	call codes_set(igrib,"productDefinitionTemplateNumber",parm_id%Template)
 	call codes_set(igrib,"discipline",parm_id%Discipline)

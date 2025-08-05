@@ -23,7 +23,7 @@ program mpas_nc2grib2
   use stringflib
   use datelib
   use mgrib_interface
-  use mgrib_tables, only :init_parm,init_parm2, var,svar=>nvar,get_cfVarName_index,get_ncVarName_index
+  use mgrib_tables, only :init_parm,init_parm2, var,svar=>nvar,get_cfVarName_index,get_ncVarName_index,tablesVersion_default
   use metlib, only :rseca, saturation_Adiabatic,temperature_lapse_rate,w2omega,tvirtw_kelvin
 
   implicit none
@@ -423,7 +423,7 @@ program mpas_nc2grib2
 !------------------------------
     outfile_c=current_filename(OUTFILE,start_date,ifct);
     print *,":MPAS_NC2GRIB2: output filename=",trim(outfile_c)
-    call openw_grib(outfile_c,grib_def)
+    call openw_grib(outfile_c,grib_def,tablesVersion_default)
 
 
      if (seqdim=="XYZT") then

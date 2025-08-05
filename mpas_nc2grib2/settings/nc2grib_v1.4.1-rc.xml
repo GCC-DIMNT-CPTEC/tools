@@ -4,9 +4,7 @@
         <definition def="0" title="Product definition template 4.0 - analysis or forecast at a horizontal level or in a horizontal layer at a point in time" />
         <definition def="8" title="Product definition template 4.8 - average, accumulation and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous> time interval">
     </product>
-     
-    <settings tablesVersion="28"/>
-
+    <settings tablesVersion_default="4"/>
     <nc2grib2>
           <element NCVar="ter" cfVarName="mterh" Name="Model terrain height" >
             <template def="0">

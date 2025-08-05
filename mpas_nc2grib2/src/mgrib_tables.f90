@@ -12,7 +12,7 @@ module mgrib_tables
  type(grib_parameter_id),dimension(nvarmax)::var
  integer                                   ::psup_id ! Surface pressure index (for grib1 only) to indicate that this values must
                                                   ! be convert from hPa do Pa
- integer::tablesVersion
+ integer::tablesVersion_default
  character(len=1024)::eccodes_dir
  character(len=1024)::nc2grib_dir
  contains
@@ -92,7 +92,7 @@ subroutine init_parm2(parm_table)
 
    i=0
    op=.false.
-   tablesVersion=4
+   tablesVersion_default=4
    call getenv("NC2GRIB_DIR",nc2grib_dir)
    if (len_trim(nc2grib_dir)==0) then
      print *,"Error! NC2GRIB_DIR environment variable not found"
@@ -124,9 +124,9 @@ subroutine init_parm2(parm_table)
       endif
     
       if (tag=="settings") then 
-        if (trim(attribs(1,1))=="tablesVersion") then 
-	   tablesVersion=val(attribs(2,1))
-	   print *,"Settings: tablesVersion=",tablesVersion
+        if (trim(attribs(1,1))=="tablesVersion_default") then
+	   tablesVersion_default=val(attribs(2,1))
+	   print *,"Settings: tablesVersion_Default=",tablesVersion_Default
         end if 
       end if 
 
