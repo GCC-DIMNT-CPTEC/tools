@@ -5,9 +5,10 @@ if [[ $a == *"egeon"* ]]; then
 	module load cdo-2.0.4-gcc-9.4.0-bjulvnd
 	module load netcdf-fortran
 	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
-else
-	export NC2GRIB_DIR=../../
 fi
+
+export NC2GRIB_DIR=../../
+
 
 dirin=./datain
 dirout=./dataout
@@ -22,6 +23,5 @@ for fff in 000 003 006 012 024 ; do
     forecast_time=$yy2$mm2$dd2$hh2
 
     filein=$dirin/MONAN_DIAG_G_POS_GFS_${start_time}_${forecast_time}.x1024002L55.nc
-
     $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 2
 done
