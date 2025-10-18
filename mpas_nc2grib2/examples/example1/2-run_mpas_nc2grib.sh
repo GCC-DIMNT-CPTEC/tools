@@ -5,6 +5,7 @@ if [[ $a == *"egeon"* ]]; then
 	module load cdo-2.0.4-gcc-9.4.0-bjulvnd
 	module load netcdf-fortran
 	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
+	export NC2GRIB_DIR=../..
 else
 	export NC2GRIB_DIR=../..
 fi
@@ -17,7 +18,7 @@ fileout=$dirout/MONAN_DIAG_G_POS_GFS_%Y4%M2%D2%H2_%y4%m2%d2%h2.x1024002L55
 
 start_time=2024070900
 
-for fff in 000 003 006 012 024 ; do
+for fff in 000 ; do # 003 006 012 024 ; do
     source ./get_date.sh ${start_time}${fff}
     forecast_time=$yy2$mm2$dd2$hh2
 

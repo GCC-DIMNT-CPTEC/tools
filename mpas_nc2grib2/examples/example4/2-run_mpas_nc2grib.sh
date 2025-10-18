@@ -8,6 +8,7 @@ if [[ $a == *"egeon"* ]]; then
     echo $a
 	module load cdo-2.0.4-gcc-9.4.0-bjulvnd
 	module load netcdf-fortran
+	export NC2GRIB_DIR=../..
 	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
 else
 	export NC2GRIB_DIR=../..
@@ -15,17 +16,20 @@ else
 fi
 
 conf_table_name="nc2grib_v1.4.1-rc.xml"
-sufix='x1024002L18'
-
+#sufix='x1024002L18'
+sufix='x1024002L55'
 dirout=./dataout
-
-start_time=2025072800
+yy=2025
+mm=10
+dd=17
+hh=00
+start_time=$yy$mm$dd$hh
 for fff in 000 ; do 
    source ./get_date.sh ${start_time}${fff}
    forecast_time=$yy2$mm2$dd2$hh2
 
-   dirin=./datain/$yy0$mm0$dd0$hh0/Post
-   dirout=./dataout/GRIB2/$yy0$mm0$dd0$hh0
+   dirin=./datain/$yy0/$mm0/$dd0/$hh0
+   dirout=./dataout/GRIB2/$yy0/$mm0/$dd0/$hh0
    echo "Origin="$dirin
    echo "Destino="$dirout
    mkdir -p $dirout
