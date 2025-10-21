@@ -45,8 +45,8 @@ def convert2grib2(d,ff) :
 			print(fileout+".grib2:  Ok \n")
 			ok=1
 		else:
-			if (hostname=='egeon') :
-				ok=submit_egeon()
+			if  (hostname.find("egeon")>=0) :
+				ok=submit_egeon(filein,fileout,dx0,fff)
 			else :
 				ok=submit_generic(filein,fileout,dx0,fff)
 	else:
@@ -67,19 +67,17 @@ def submit_egeon(filein,fileout,dx0,fff) :
 	f.write("module load cdo-2.0.4-gcc-9.4.0-bjulvnd\n")
 	f.write("module load netcdf-fortran\n")	
 	f.write("export NC2GRIB_DIR='../..'\n")
-	f.write("export NFDIR='/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3'")
+	f.write("export NFDIR='/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3'\n")
 	f.write("$NC2GRIB_DIR/bin/mpas_nc2grib2.x -c "+conf_table_name+" -i "+filein+" -o "+fileout+" -s "+dx0+" -f "+fff+" -v 3\n")
 	f.close()
 	cmd="chmod 755 "+sname
 	os.system(cmd)
 
-	LOGFILE=LOGDIR+'/nc2grib2.log'
+	LOGFILE='./nc2grib2.log'
 	cmd="sbatch -o "+LOGFILE+" "+sname
 	os.system(cmd)
 	ok=1
 	return ok
-
-	
 #-----------------------------------------------------------------------
 # Write and submit script to run mpas_nc2grib2 in generic
 #-----------------------------------------------------------------------
@@ -110,7 +108,9 @@ resolution='x1.5898242L55'
 conf_table_name='nc2grib_v1.4.1-rc.xml'
 reference_date='2022100800'
 ref_date=datetime.strptime(reference_date,'%Y%m%d%H')	
-
+if (hostname.find("egeon")): 
+ 	print ("Running in EGEON\n")
+ 
 #hx=8*24   # Max forecast time 
 hx=3
 for ff in range (0,hx,3):
