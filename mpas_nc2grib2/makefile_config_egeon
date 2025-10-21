@@ -1,7 +1,12 @@
-#module load netcdf-fortran
+#
+# Note: Before run the make file use the followed commands:
+#   module load netcdf-fortran
+#   module load libaec-1.0.5-gcc-9.4.0-4qmyxr4
+#
+
 NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
 
-# Opcoes de compiladores
+# Compiler options 
 #F90=gfortran -g  -fno-range-check -ffree-form                # COMPILACAO COM gfortran sequencial
 #F90=gfortran -g  -fno-range-check -ffree-form  -fopenmp      # COMPILACAO COM gfortran e OPENMP (Debug) 
 F90=gfortran -O3 -fno-range-check -ffree-form  -fopenmp      # COMPILACAO COM gfortran e OPENMP (otimizacao 03)
