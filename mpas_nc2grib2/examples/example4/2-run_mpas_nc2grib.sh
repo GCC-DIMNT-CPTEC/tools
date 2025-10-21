@@ -26,7 +26,7 @@ for fff in 000 ; do
    forecast_time=$yy2$mm2$dd2$hh2
 
    dirin=./datain/$monandir/$yy0$mm0$dd0$hh0/Post
-   dirout=./dataout/GRIB2/$yy0$mm0$dd0$hh0
+   dirout=./dataout
    echo "Origin="$dirin
    echo "Destino="$dirout
    mkdir -p $dirout
