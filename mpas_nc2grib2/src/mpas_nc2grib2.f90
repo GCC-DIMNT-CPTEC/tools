@@ -19,6 +19,7 @@ program mpas_nc2grib2
 !                      : for 2 cases: xyzt and zxyt
 ! 2025-05-10  V2.0-beta: New approach: configuration table nc2grib2.csv was replaced with nc2grib.2.xml
 ! 2025-07-01  Improviment: Check of the coordinated variables sequence were included
+! 2025-10-22  Improviment: The regular_grid function was included 
   use netcdf
   use stringflib
   use datelib
@@ -57,9 +58,9 @@ program mpas_nc2grib2
   integer                              :: ifct
   real                                 :: P, Tv
   integer                              :: step
-  real *8                              :: lonf,loni,dlon,latf,lati,dlat
+  real                                 :: lonf,loni,dlon,latf,lati,dlat
 
-
+   real                                 ::missing
   CHARACTER(LEN=15)                ::dname,udname
   character(len=nf90_max_name)     ::vin_name
   character(len=254)               ::longname
@@ -72,8 +73,11 @@ program mpas_nc2grib2
   character (len = 1024)           ::OUTFILE, OUTFILE2,outfile_c
   character(len=1),dimension(100)  ::namearg   !. Nome dos argumentos!
   character(len=256),dimension(100)::arg       !.argumentos!
+  real  ::diff                                !. Auxiliar variable for differences calculus 
+  real  ::maxd2,d2   
   integer::nargs                               !. numero de argumentos efetivamente passados!
   integer::i,j,k                               !. Variavel auxiliar!
+  integer::l                                   !. Index for latitudes/longitudes checks
   integer::x1,x2,X3,X4
   integer::op
   integer::verbose
@@ -119,7 +123,7 @@ program mpas_nc2grib2
        print *,"|--------------------------------------------------------------+"
        print *,"| mpas_nc2grib2.x                                              |"
        print *,"|--------------------------------------------------------------+"
-       print *,"| MCTI-INPE (2025-11-06) V. 2.0 beta                           |"
+       print *,"| MCTI-INPE (2025-10-22) V. 2.1                                |"
        print *,"|--------------------------------------------------------------+"
 
       if (x1*x2*x3==0) then
@@ -259,14 +263,20 @@ program mpas_nc2grib2
  !-----------
  ! Read DATA
  !----------
- !*** Read Lon ***
+ !*** Reading Longitudes ***
   call check(nf90_get_var(ncid, ilon, lon) )
   if (verbose>0) print *,":MPAS_NC2GRIB2: Reading Longitudes.. "
-  ! Recalculate longitudes from boders to the center of grid points
-   dlon=(lon(nlon-1)-lon(0))/(nlon-1)
-   dlon=round(dlon,4)
+   
+  if (.not. regular_grid(lon,nlon)) then 
+      print *,"Error!  Irregular grid was detected" 
+      print *,"Note: In the present version This program convert nc to grib2 just only in the case of regular grid"
+      stop
+   end if
+    
    loni=lon(0)
+   dlon=(lon(nlon-1)-lon(0))/(nlon-1)
    lonf=lon(nlon-1)
+   
 
    !loni=lon(0)+dlon/2.0
    !lonf=dlon*(nlon-1)+loni
@@ -274,18 +284,23 @@ program mpas_nc2grib2
   if (verbose>0) print *,":MPAS_NC2GRIB2: nlon=",nlon,"lon = [", loni,":",lonf ,":",dlon," ]"
   
   
- !*** Read Lat ***
+ !*** Reading Latitudes ***
 
   call check(nf90_get_var(ncid, ilat, lat) )
   if (verbose>0) print *,":MPAS_NC2GRIB2: Reading Latitudes.. "
-   ! Recalculate latitudes from boders to the center of grid points
-   dlat=(lat(nlat-1)-lat(0))/(nlat-1)
-   dlat=round(dlat,4)
+  
+   if (.not. regular_grid(lat,nlat)) then 
+      print *,"Error!  Irregular grid was detected" 
+      print *,"Note: In the present version This program convert nc to grib2 just only in the case of regular grid"
+      stop
+   end if
+   
+   
    lati=lat(0)
-   latf=lat(nlat-1)
+   dlat=(lat(nlat-1)-lat(0))/(nlat-1)
+   latf=lati+dlat*(nlat-1)
+   
 
-   !lati=lat(0)+dlat/2.0
-   !latf=dlat*(nlat-1)+lati
 
 
   if (verbose>0) print *,":MPAS_NC2GRIB2: nlat=",nlat,"lat = [", lati,":",latf,":",dlat,"]"
@@ -307,7 +322,8 @@ program mpas_nc2grib2
     vin_name=""
 
     call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims))
-
+    call check( nf90_get_att(ncid, varid,'_FillValue', missing))
+    print *,"missing=",missing
     if ( len_trim(vin_name)==0) then 
         print *,":MPAS_NC2GRIB2: Error in nf90_inquire_variable!"
         print *,"  ncid,varid=",ncid,varid
@@ -316,12 +332,13 @@ program mpas_nc2grib2
 
    i=get_ncVarName_index(vin_name)
    if (i>0) then
+
       if ((ndims>3).and.(var(i)%tflevel/=100)) then
          print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] Error in the variable dimension deffinition"
       else
          if (verbose>1) print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] OK"
       end if
-
+      var(i)%missing=missing
       check_var(i)=.true.
        if (verbose>2) print *,"...Reading ",i," [",trim(vin_name),"]= ",trim(var(i)%VarName)
 
@@ -337,7 +354,7 @@ program mpas_nc2grib2
        else
        !-------------------------------------------------------------
            if ((var(i)%tflevel/=100).and.(ndims==3)) then
-            call check(nf90_get_var(ncid, varid, vzxyt(i,0,:,:,:)))
+	    call check(nf90_get_var(ncid, varid, vzxyt(i,0,:,:,:)))
           else
              call check(nf90_get_var(ncid, varid, vzxyt(i,:,:,:,:)))
           end if
@@ -346,7 +363,7 @@ program mpas_nc2grib2
 
     else
        if (verbose>2) then
-           call check( nf90_get_att(ncid, varid,'long_name', longname))
+          call check( nf90_get_att(ncid, varid,'long_name', longname))
           print *,varid," nc=[",trim(vin_name),"] cf=[ ",trim(color_text("IGNORED",33,.false.))," ] --> ",trim(longname)
         end if
     end if
@@ -418,7 +435,7 @@ program mpas_nc2grib2
     if (verbose>2)  print *,"itime=",grib_def%itime
     step=ifct
 
-!-----------------------------
+!-----------------------------  
 ! Saving data in grib2 format
 !------------------------------
     outfile_c=current_filename(OUTFILE,start_date,ifct);
@@ -556,13 +573,53 @@ contains
 	 current_filename=trim(filename)
    end function
 
+!----------------------------
+! rounding function 
+!----------------------------
+!----------------------------
    real function round(val, n)
       implicit none
-      real*8,intent(in) :: val
-      integer,intent(in) :: n
-      real*8::val2
-      val2=val*(10.0**n)+0.5
-      round = int(val2)/10.0**n
+      real,intent(in) :: val   !Values 
+      integer,intent(in) :: n  !Number of decimals 
+      integer::val0
+      
+      val0=int(val*(10.0**(n))+0.5)
+      round = real(val0)/10.0**n
     end function round
+    
+ 
+ 
+ !--------------------------------------------------------------------------------------
+ ! Testing if it is a regular  grib 
+ ! nx = number of elements 
+ ! nx-1 represents the last index as the first index is 0
+ ! In order to find the regular interval we do  (x(nx-1)-x(0))/(nx-1)
+ ! The values are rounded to 4  decilmals 
+ !-----------------------------------------------------------------------------------
+ logical function regular_grid(x,nx)
+   real,dimension(:),intent(in)::x
+   integer,intent(in)::nx
+   real::dx,diff
+   real::maxd2
+   integer::l
+   dx=(x(nx)-x(1))/(nx-1)
+   dx=round(dx,4)
+    maxd2=0
+   do  l=2,nx-1
+   	diff=(x(l+1)-X(l))
+	diff=round(diff,4)
+	d2=diff-dx
+	if (abs(d2)>maxd2) maxd2=d2
+	!write(*,*)l,diff,dx,x(l),X(l+1),d2,maxd2
+   end do
+   if (maxd2==0) then
+     regular_grid=.true.
+   else
+     regular_grid=.false.
+   end if
+55 format(i3,2(1x,f8.6),2(1x,f9.5),2(1x,f9.7))
+
+ 
+ end function 
 
 end program

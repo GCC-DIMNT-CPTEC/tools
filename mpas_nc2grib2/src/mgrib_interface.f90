@@ -38,16 +38,17 @@ module mgrib_interface
    character(len=8)  ::cfVarName
    character(len=32) ::ncVarName
    character(len=250)::VarName
+   real              ::missing
  end type
 
  type grib_interface_def
    integer::edition
    integer::productionStatus
-   integer::gridType         ! 1-regular_ll, 2-regular_gg
+   integer::gridType              ! 1-regular_ll, 2-regular_gg
    character(len=20)::packingType !"grid_ccsds, etc"
-   real,pointer  ::lev(:)    !Vertical levels
-   real,pointer  ::lat(:)    !Latitudes
-   real,pointer  ::lon(:)    !Longitues
+   real,pointer  ::lev(:)         !Vertical levels
+   real,pointer  ::lat(:)         !Latitudes
+   real,pointer  ::lon(:)         !Longitues
    integer       ::NI
    integer       ::NJ
    integer       ::NK
@@ -155,6 +156,7 @@ module mgrib_interface
    real,dimension(:,:),  intent(in)::par
    real,                 intent(in)::level
    integer,              intent(in)::step
+
    
 
    real,dimension(:),allocatable ::values
@@ -231,7 +233,13 @@ module mgrib_interface
 		do j=Nj,1,-1
 			do i=1,Ni
 				nb=nb+1
-				values(nb)=par(i,j)
+				if (par(i,j)==parm_id%missing) then 
+					values(nb)=0
+					!print *,">>",parm_id%missing
+				else 
+					values(nb)=par(i,j)
+					!print *,i,j,par(i,j),parm_id%missing
+				end if 
 			end do
 		end do
 	call codes_set(igrib,"values",values)
