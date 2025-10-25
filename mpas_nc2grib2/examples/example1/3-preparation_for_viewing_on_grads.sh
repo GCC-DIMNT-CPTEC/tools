@@ -9,6 +9,7 @@ else
 	export NC2GRIB_DIR=../
 fi
 GRIBMAP=/home/sergio.ferreira/GRADS/grads_2.0.a9/bin/gribmap
+GRIBMAP=gribmap
 DIR=./dataout
 start_time=2024070900
 cd $DIR

@@ -323,7 +323,6 @@ program mpas_nc2grib2
 
     call check( nf90_inquire_variable(ncid, varid, vin_name,xtype,ndims))
     call check( nf90_get_att(ncid, varid,'_FillValue', missing))
-    print *,"missing=",missing
     if ( len_trim(vin_name)==0) then 
         print *,":MPAS_NC2GRIB2: Error in nf90_inquire_variable!"
         print *,"  ncid,varid=",ncid,varid
