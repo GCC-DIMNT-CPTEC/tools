@@ -112,8 +112,8 @@ conf_table_name='nc2grib_v1.4.1-rc.xml'
 #
 reference_date='2022100800'
 ref_date=datetime.strptime(reference_date,'%Y%m%d%H')	
-hx=3
-for ff in range (0,hx,3):
+hx=48
+for ff in range (0,hx,24):
 	ok1=convert2grib2(ref_date,ff)
 
 #
@@ -121,6 +121,6 @@ for ff in range (0,hx,3):
 #
 reference_date='2023030800'
 ref_date=datetime.strptime(reference_date,'%Y%m%d%H')
-hx=3
-for ff in range (0,hx,3):
+hx=48
+for ff in range (0,hx,24):
 	ok1=convert2grib2(ref_date,ff)

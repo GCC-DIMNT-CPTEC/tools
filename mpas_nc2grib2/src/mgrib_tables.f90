@@ -178,7 +178,7 @@ subroutine init_parm2(parm_table)
              if (trim(attribs(1,j))=="typeOfFirstFixedSurface") var(i)%tflevel=val(attribs(2,j))
              if (trim(attribs(1,j))=="scaleFactorOfFirstFixedSurface") var(i)%sFactor_FFS=val(attribs(2,j))
              if (trim(attribs(1,j))=="scaledValueOfFirstFixedSurface") var(i)%sValue_FFS=val(attribs(2,j))
-             if (trim(attribs(1,j))=="timeint") var(i)%time_interval=val(attribs(2,j))
+             if (trim(attribs(1,j))=="timeInterval") var(i)%time_interval=val(attribs(2,j))
              nvar=i
         enddo
 

@@ -40,9 +40,8 @@ remote0="https://ftp.cptec.inpe.br/pesquisa/bam/paulo.kubota/externo/Curso_da_OM
 destination0='./datain/'
 run='2022100800'
 ref_date=datetime.strptime(run,'%Y%m%d%H')
-hx=3
-
-for ff in range (0,hx,3):
+hx=48
+for ff in range (0,hx,24):
 	ok1=Download(ref_date,ff)
 
 # Galapagos
@@ -50,8 +49,8 @@ remote0='https://ftp.cptec.inpe.br/pesquisa/bam/paulo.kubota/externo/Curso_da_OM
 run='2023030800'
 destination0='./datain/'
 ref_date=datetime.strptime(run,'%Y%m%d%H')
-hx=3
-for ff in range (0,hx,3):
+hx=48
+for ff in range (0,hx,24):
 	ok1=Download(ref_date,ff)
 #---------------------------
 # Notes

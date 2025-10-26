@@ -168,15 +168,15 @@
                     <id scaledValueOfFirstFixedSurface = "0"/>
                 </template>
         </element>
-        <element NCVar="rainnc" cfVarName="ncpcp" Name="Large scale precipitation (non-convective) (kg m-2) (Table 4.2.0.1.table)" >
+        <element NCVar="rainnc" cfVarName="unknown" Name="Total precipitation (kg m-2) (Table 4.2.0.1.table)" >
             <template def="8">
                     <id discipline="0" />
                     <id parameterCategory="1" />
-                    <id parameterNumber="9" />
+                    <id parameterNumber="8" />
                     <id typeOfFirstFixedSurface ="1" />
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id timeint = "-1"/>
+                    <id timeInterval = "-1"/>
                 </template>
         </element>
         <element NCVar="rainc" cfVarName="acpcp" Name="Convective precipitation (kg m-2)   (Table 4.2.0.1.table)" >
@@ -187,7 +187,7 @@
                     <id typeOfFirstFixedSurface ="1" />
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id timeint = "-1"/>
+                    <id timeInterval = "-1"/> # "-1" =  time interval from start time to forecast time
                 </template>
         </element>
         <element NCVar="lh" cfVarName="slhf" Name="Surface latent heat flux w/kg" >
@@ -198,7 +198,7 @@
                     <id typeOfFirstFixedSurface ="1" />
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id timeint = "-1"/>
+                    <id timeint = "-1"/> # "-1" =  time interval from start time to forecast time
                 </template>
         </element>
         <element NCVar="cape" cfVarName="cape" Name="Convective available potential energy" >
