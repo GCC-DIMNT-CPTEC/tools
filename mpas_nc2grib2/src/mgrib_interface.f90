@@ -5,10 +5,13 @@
 !
 ! Author: Sergio Henrique Soares Ferreira (Fev 2022)
 !-----------------------------------------------------------------------------
-! About EcCodes
-!  see https://confluence.ecmwf.int/display/UDOC/GRIB+Keys+-+ecCodes+GRIB+FAQ
+! References About EcCodes
+! https://confluence.ecmwf.int/display/UDOC/GRIB+Keys+-+ecCodes+GRIB+FAQ
+! https://sites.ecmwf.int/docs/eccodes/classeccodes.html
+! https://confluence.ecmwf.int/display/ECC/grib_set_bitmap
 !-----------------------------------------------------------------------------
 ! 25/02/2022 SHSF Preliminar version
+! 26/10/2025 SHSF grib2 codification has been done. The bitmap codification has been included
 
 
 module mgrib_interface
@@ -25,6 +28,7 @@ module mgrib_interface
 	public openw_grib
 	public write_grib2
 	public close_grib
+	public set_bitmap
 	
  type grib_parameter_id
    integer           ::Template
@@ -59,6 +63,7 @@ module mgrib_interface
    real          ::dlat
    real          ::dlon
  end type
+
   integer            ::tablesVersion_default
   integer            ::rfile,igrib,out1
   integer            ::iret
@@ -73,6 +78,9 @@ module mgrib_interface
   integer            ::NI,NJ,NK
 
   character(len=20)::packingType
+  logical                              :: bitmapPresent=.false. !If .true. Bitmap and missing values will be included for write
+  integer                              :: bitMapIndicator=255
+  real                                 :: current_missing
  contains
  
 !-----------------------------
@@ -100,6 +108,7 @@ module mgrib_interface
 	dlat=grib_def%dlat
 	dlon=grib_def%dlon
 	packingType=grib_def%packingType
+
 	write(outfile,'(a,".grib",i1)')trim(grib_file),editionNumber
 !	print *,":MGRIB_INTERFACE: output filename = ",trim(outfile)
 	!call codes_grib_open_file(out1,grib_file,'w')
@@ -157,17 +166,18 @@ module mgrib_interface
    real,                 intent(in)::level
    integer,              intent(in)::step
 
-   
-
+!{ Local variables
    real,dimension(:),allocatable ::values
    integer:: SFactor_FFS
    integer:: SValue_FFS
    integer:: tlevel
    integer:: NB
-   integer::i,j,k
+   integer:: i,j,k
    character(len=20)::stepRange
    integer          ::initStep, endStep
-    call codes_set(igrib, "tablesVersion", tablesVersion_default,status)
+!}
+
+    call codes_set(igrib,"tablesVersion", tablesVersion_default,status)
 	call codes_set(igrib,"packingType",packingType)
 	call codes_set(igrib,"productDefinitionTemplateNumber",parm_id%Template)
 	call codes_set(igrib,"discipline",parm_id%Discipline)
@@ -187,30 +197,33 @@ module mgrib_interface
 			call codes_set(igrib,"typeOfGeneratingProcess",2)
 		end if 
 		
-		!
-		! Step reange definitions
-		!
+	!------------------------
+	! Step range definitions
+	!------------------------
+	!{
 		if (parm_id%time_interval>0) then
-		        endStep=step 
+			endStep=step
 			initStep=endstep-parm_id%time_interval
 			if (initStep<0) initStep=0 
-		        write(stepRange,'(i3,"-",i3)')initStep,endStep
-		        call codes_set(igrib,"stepRange",stepRange)
-			call codes_set(igrib,"endStep",endStep)
-		elseif (parm_id%time_interval==0) then 
-			call codes_set(igrib,"stepRange",step)
-		else   ! Accumulation since the start time 
+				write(stepRange,'(i3,"-",i3)')initStep,endStep
+				call codes_set(igrib,"stepRange",stepRange)
+				call codes_set(igrib,"endStep",endStep)
+			elseif (parm_id%time_interval==0) then
+				call codes_set(igrib,"stepRange",step)
+			else   ! Accumulation since the start time
 			endStep=step 
 			write(stepRange,'("0-",i3)')endStep
 			call codes_set(igrib,"stepRange",stepRange)
 			call codes_set(igrib,"endStep",endStep)
 		endif 	
 		
-		!*** step type = "accuml, ave, instant
-		!*** codes_set__nc(Number of bit..... ) 
+	!*** step type = "accuml, ave, instant
+	!*** codes_set__nc(Number of bit..... )
+	!}
 
-		!# Code table 4.5: Fixed surface types and units
-		!print *,"cfVarName=",parm_id%cfVarname
+	!# Code table 4.5: Fixed surface types and units
+	!print *,"cfVarName=",parm_id%cfVarname
+	!{
 		tlevel=parm_id%tflevel
 		if (parm_id%tflevel==100) then
 		   SFACTOR_FFS=0
@@ -227,24 +240,34 @@ module mgrib_interface
 		call codes_set(igrib,"scaleFactorOfFirstFixedSurface",SFactor_FFS)
 		call codes_set(igrib,"scaledValueOfFirstFixedSurface",SValue_FFS)
 		!call codes_set_size(igrib,"values",nb_values)
+	!}
+	!------------------------------------------------------------------------------------
+	! Enable Bitmap and define the missing values for the current variable / grib message
+	!------------------------------------------------------------------------------------
+	!{
+		if (bitmapPresent) then
+			call codes_set(igrib, 'missingValue',current_missing)
+			call codes_set(igrib, 'bitmapPresent', 1)
+		end if
+	!}
 
+	!--------------
+	! Write values
+	!--------------
+	!{
 		allocate(values(NB))
+
 	    nb=0
 		do j=Nj,1,-1
 			do i=1,Ni
 				nb=nb+1
-				if (par(i,j)==parm_id%missing) then 
-					values(nb)=0
-					!print *,">>",parm_id%missing
-				else 
-					values(nb)=par(i,j)
-					!print *,i,j,par(i,j),parm_id%missing
-				end if 
+				values(nb)=par(i,j)
 			end do
 		end do
 	call codes_set(igrib,"values",values)
 	deallocate(values)
-   	call codes_write(igrib,out1)
+	call codes_write(igrib,out1)
+	!}
 
 
  end subroutine
@@ -252,6 +275,70 @@ module mgrib_interface
  subroutine close_grib
 	call codes_release(igrib)
 	call codes_close_file(out1)
+
+end subroutine
+
+!------------------------------------------------------------------------------
+! subroutine |set_bitmap                                               | SHSF |
+!-----------------------------------------------------------------------------
+! This subroutine detects if missing values are presents in the provide data
+! Case yes then set bitmapPresent=.true. as well as current_missing value
+! to include the condification of bitmap in grib2
+!------------------------------------------------------------------------------
+! Note: bitmap(i,j) is not been used because EcCodes performs it
+! internally for enconde. It is here just for future uses
+!-----------------------------------------------------------------------------
+subroutine set_bitmap(data,missing,bitmap)
+ !{ Interface Variables
+   real,dimension(:,:),intent(in)::data
+   real,               intent(in)::missing
+   logical,dimension(:,:),intent(out)::bitmap
+ !}
+ !{Local variables
+   integer ::i,j
+  !}
+  bitmapPresent=.false.
+  bitMapIndicator=255
+  current_missing=missing
+  do i=1,Ni
+     do j=1,Nj
+        if (data(i,j)==missing) then
+			bitmap(i,j)=.false.
+			bitmapPresent=.true.
+		else
+			bitmap(i,j)=.true.
+		end if
+	end do
+  end do
+  if (.not.bitmapPresent) bitmap(:,:)=.false.
+
+  !The bitmap size is the number of points in the grid
+!(numberOfPoints)
+!0 -> value is missing
+!1 -> value is present
+!• When encoding, you can use the key missingValue to tell
+!the library where data is missing
+!• By default this is 9999 but it can be changed by the user
+!e.g. a value out of the range of normal data
+!• You must also set the key bitmapPresent to 1
+!• When the library encounters a value equal to the missing
+!value in the data array, it will set the bitmap entry to 0 for
+!that grid point
+!• When decoding, you can directly query the bitmap to
+!discover missing data values
+!14EUROPEAN CENTRE FOR MEDIUM-RANGE WEATHER FORECASTS October 29, 2014
+!Bitmap: Practicals
+!cd $SCRATCH
+!cd grib_packing/bitmap
+!1.You have a GRIB start.grib with 4 messages. Set
+!1.bitsPerValue=8, bitmapPresent=0 in the first message
+!2.bitsPerValue=16, bitmapPresent=0 in the second message
+!3.bitsPerValue=24, bitmapPresent=0 in the third message
+!4.bitsPerValue=8, bitmapPresent=1 in the fourth message
+!2. Set values = {0.2, 0.4, 0.6, 0.7, 9999}
+!3. Print the values
+!(Hint: you can use grib_filter)
+
 
 end subroutine
 !-----------------------------

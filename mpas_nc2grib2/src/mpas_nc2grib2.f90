@@ -48,10 +48,10 @@ program mpas_nc2grib2
   integer::nt
   integer::vv
   real :: hh
-  real,dimension(:),      allocatable  :: lon,lat,lev
+  real,dimension(:),        allocatable:: lon,lat,lev
   real,dimension(:,:,:,:,:),allocatable:: vxyzt,vzxyt
-  real,dimension(:,:,:),allocatable    :: dz,dz2,zp
-  logical,dimension(:),allocatable     :: check_var
+  real,dimension(:,:,:),    allocatable:: dz,dz2,zp
+  logical,dimension(:),     allocatable:: check_var
   type(grib_interface_def)             :: grib_def
   real *8                              :: start_date
   real *8                              :: ref_date
@@ -59,8 +59,16 @@ program mpas_nc2grib2
   real                                 :: P, Tv
   integer                              :: step
   real                                 :: lonf,loni,dlon,latf,lati,dlat
+!------------------------------------------------
+! bitmap and missing values variables
+ ! # A bit map does not apply to this product (grib2/tables/4/6.0.table)
+ ! bitMapIndicator = 255;
+ ! bitmapPresent = 0;
 
-   real                                 ::missing
+  real                                 :: missing
+  logical,dimension(:,:),   allocatable:: bitmap       !grib bitmap
+
+!------------------------------------------------
   CHARACTER(LEN=15)                ::dname,udname
   character(len=nf90_max_name)     ::vin_name
   character(len=254)               ::longname
@@ -258,6 +266,7 @@ program mpas_nc2grib2
          print *,":MPAS_NC2GRIB2: STOP"
          stop
      end if
+     allocate (bitmap(0:nlon-1,0:nlat-1))
      check_var(:)=.false.
 
  !-----------
@@ -337,6 +346,7 @@ program mpas_nc2grib2
       else
          if (verbose>1) print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] OK"
       end if
+
       var(i)%missing=missing
       check_var(i)=.true.
        if (verbose>2) print *,"...Reading ",i," [",trim(vin_name),"]= ",trim(var(i)%VarName)
@@ -441,16 +451,17 @@ program mpas_nc2grib2
     print *,":MPAS_NC2GRIB2: output filename=",trim(outfile_c)
     call openw_grib(outfile_c,grib_def,tablesVersion_default)
 
-
      if (seqdim=="XYZT") then
      !------------------------------
       do i=1,svar
        if (check_var(i)) then
           if (var(i)%tflevel==100) then
              do k=0,grib_def%NK-1
+                call set_bitmap(vxyzt(i,:,:,k,0),var(i)%missing,bitmap(:,:))
                 call write_grib2(var(i),vxyzt(i,:,:,k,0),grib_def%lev(k),step)
              end do
            else
+             call set_bitmap(vxyzt(i,:,:,0,0),var(i)%missing,bitmap(:,:))
              call write_grib2(var(i),vxyzt(i,:,:,0,0),0.0,step)
            end if
       else
@@ -485,6 +496,7 @@ program mpas_nc2grib2
 
   deallocate (lat,lon,lev)
   deallocate (grib_def%lon,grib_def%lat,grib_def%lev)
+  deallocate (bitmap)
   if (seqdim=="XYZT") then
     deallocate (vxyzt)
   else
