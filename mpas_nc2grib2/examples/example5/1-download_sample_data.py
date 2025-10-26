@@ -23,7 +23,7 @@ def Download(d,ff) :
 	hh='00'
 
 	remote=remote0+"/"+yy+mm+dd+hh
-	destination="./datain/"+yy+mm+dd+hh
+	destination=destination0+yy+mm+dd+hh
 	os.makedirs(destination, exist_ok=True)
 	file='MONAN_DIAG_R_POS_GFS_'+dx0+'_'+dx2+".00.00."+resolution+".nc"
 	cmd="wget -nc "+remote+"/"+file+" -P "+destination
@@ -33,17 +33,26 @@ def Download(d,ff) :
 # -------------------------------------------------------------------------------
 #  Main program
 #--------------------------------------------------------------------------------
+#Julia
+
 resolution='x1.5898242L55'
 remote0="https://ftp.cptec.inpe.br/pesquisa/bam/paulo.kubota/externo/Curso_da_OMM_2025_estudos_de_casos/Central_America_Hurricane_Julia/"
+destination0='./datain/'
 run='2022100800'
 ref_date=datetime.strptime(run,'%Y%m%d%H')
-#hx=8*24
-hx=6
+hx=3
+
 for ff in range (0,hx,3):
 	ok1=Download(ref_date,ff)
 
-
-
+# Galapagos
+remote0='https://ftp.cptec.inpe.br/pesquisa/bam/paulo.kubota/externo/Curso_da_OMM_2025_estudos_de_casos/Galapagos_YAKU/'
+run='2023030800'
+destination0='./datain/'
+ref_date=datetime.strptime(run,'%Y%m%d%H')
+hx=3
+for ff in range (0,hx,3):
+	ok1=Download(ref_date,ff)
 #---------------------------
 # Notes
 #--------------------------

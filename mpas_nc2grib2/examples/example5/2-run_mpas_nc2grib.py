@@ -106,14 +106,21 @@ localdir0='./datain'
 destination0='./dataout'
 resolution='x1.5898242L55'
 conf_table_name='nc2grib_v1.4.1-rc.xml'
+
+#
+# Julia
+#
 reference_date='2022100800'
 ref_date=datetime.strptime(reference_date,'%Y%m%d%H')	
-if (hostname.find("egeon")): 
- 	print ("Running in EGEON\n")
- 
-#hx=8*24   # Max forecast time 
 hx=3
 for ff in range (0,hx,3):
 	ok1=convert2grib2(ref_date,ff)
 
-
+#
+#  Galapagos
+#
+reference_date='2023030800'
+ref_date=datetime.strptime(reference_date,'%Y%m%d%H')
+hx=3
+for ff in range (0,hx,3):
+	ok1=convert2grib2(ref_date,ff)
