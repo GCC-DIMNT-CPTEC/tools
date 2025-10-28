@@ -1,6 +1,12 @@
 #!/bin/bash -x
-gribmap='/home/sergio.ferreira/GRADS/grads_2.0.a9/bin/gribmap'
-gribmap='gribmap'
+a=`hostname`
+
+if [[ $a == *"saveiro"* ]]; then
+	gribmap='/home/sergio.ferreira/GRADS/grads_2.0.a9/bin/gribmap'
+else
+	gribmap='gribmap'
+fi
+
 hh=00
 
 
