@@ -123,15 +123,14 @@ fi
 #-----------------------------------------------
 declare -i FFR
 FFR=(10#$FFF)  # (10#) Anula operacao em base octal processa em decimal
-  
-     export  yy2=`date +%Y --date="$yy-$mm-$dd $hh +$FFR hour"`
+     export yy2=`date +%Y --date="$yy-$mm-$dd $hh +$FFR hour"`
      export mm2=`date +%m --date="$yy-$mm-$dd $hh +$FFR hour"`
      export mmm2=`date +%h --date="$yy-$mm-$dd $hh +$FFR hour"`
      export dd2=`date +%d --date="$yy-$mm-$dd $hh +$FFR hour"`
      export hh2=`date +%H --date="$yy-$mm-$dd $hh +$FFR hour"`
-#     echo "tempo de previsao....................:[$FFR->$FFF]"
-#     echo "Data e hora sinotica.................:$yy0$mm0$dd0$hh0" 
-#     echo "Data e hora da analise mais proxima..:$yy$mm$dd$hh"
-#     echo "Data e hora da previsao..............:$yy2$mm2$dd2$hh2 ($dd2-$mmm2-$yy2 $hh2:00)"
+     echo "tempo de previsao....................:[$FFR->$FFF]"
+     echo "Data e hora sinotica.................:$yy0$mm0$dd0$hh0"
+     echo "Data e hora da analise mais proxima..:$yy$mm$dd$hh"
+     echo "Data e hora da previsao..............:$yy2$mm2$dd2$hh2 ($dd2-$mmm2-$yy2 $hh2:00)"
      
 

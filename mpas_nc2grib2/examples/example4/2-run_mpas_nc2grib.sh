@@ -21,20 +21,15 @@ sufix='x1024002L55'
 dirout=./dataout
 yy=2025
 mm=10
-dd=17
+dd=26
 hh=00
 start_time=$yy$mm$dd$hh
-for fff in 000 ; do 
+for fff in 000 024; do
    source ./get_date.sh ${start_time}${fff}
    forecast_time=$yy2$mm2$dd2$hh2
 
-<<<<<<< HEAD
-   dirin=./datain/$monandir/$yy0$mm0$dd0$hh0/Post
-   dirout=./dataout
-=======
-   dirin=./datain/$yy0/$mm0/$dd0/$hh0
-   dirout=./dataout/GRIB2/$yy0/$mm0/$dd0/$hh0
->>>>>>> 796bc3d77e1ce37fccee0e83a9809a587d35795c
+   dirin=./datain/
+   dirout=./dataout/
    echo "Origin="$dirin
    echo "Destino="$dirout
    mkdir -p $dirout

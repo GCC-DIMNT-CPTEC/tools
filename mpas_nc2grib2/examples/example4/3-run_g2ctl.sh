@@ -13,18 +13,16 @@ else
 fi
 
 monandir="tc/1.4.1-rc/P1"
-sufix='x1024002L18'
+sufix='x1024002L55'
 
 dirout=./dataout
 
-start_time=2024050100
-for fff in 000 ; do 
+start_time=2025102600
+for fff in 000 024; do
    source ./get_date.sh ${start_time}${fff}
    forecast_time=$yy2$mm2$dd2$hh2
 
-   dirout=./dataout/GRIB2/$yy0$mm0$dd0$hh0
-   echo "Origin="$dirin
-   echo "Destino="$dirout
+   dirout=./dataout
    cd $dirout
    gribfile='./MONAN_DIAG_G_POS_GFS_'${start_time}_${forecast_time}'.'$sufix'.grib2'
 
@@ -36,6 +34,6 @@ for fff in 000 ; do
       echo "ERROR!: File not found"
       echo $gribfile
    fi
-
+  cd -
 
 done
