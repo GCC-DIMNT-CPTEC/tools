@@ -3,40 +3,11 @@
     <product>
         <definition def="0" title="Product definition template 4.0 - analysis or forecast at a horizontal level or in a horizontal layer at a point in time" />
         <definition def="8" title="Product definition template 4.8 - average, accumulation and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous> time interval">
-            <!--
-	       In case of template 4.8 , time interval must be provided: 
-	         time_interval is the tnterval in hours in case of accumulated or mean parameter or template
-                         Note: Use time_interval=-1  to indicate time_interval from start time to forecast time
-	    -->
-
     </product>
-    <settings tablesVersion_default="4"/>
+     
+    <settings tablesVersion="4"/>
+
     <nc2grib2>
-        <!--
-          <element NCVar="ter" cfVarName="mterh" Name="Model terrain height" >
-            <template def="0">
-                    <id discipline="2" />
-                    <id parameterCategory="0" />
-                    <id parameterNumber="7" />
-                </template>
-        </element>
-	-->
-        <element NCVar="ter" cfVarName="sgh" Name="Surface Geopotential Height" >
-              <template def="0">
-                    <id discipline="0" />
-                    <id parameterCategory="3" />
-                    <id parameterNumber="5" />
-                    <id typeOfFirstFixedSurface ="1" />
-                </template>
-        </element>
-            <element NCVar="landmask" cfVarName="lsm" Name="Land-sea mask" >
-              <template def="0">
-                    <id discipline="2" />
-                    <id parameterCategory="0" />
-                    <id parameterNumber="0" />
-                    <id typeOfFirstFixedSurface ="1" />
-                </template>
-        </element>
         <element NCVar="t2m" cfVarName="t2m" Name="2 metre temperature" >
             <template def="0">
                     <id discipline="0" />
@@ -56,13 +27,6 @@
                     <id scaledValueOfFirstFixedSurface = "2"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
                 </template>
-        </element>
-        <element NCVar="precipw" cfVarName="pwat" Name="Precipitable water (kg m-2)" >
-             <template def="0">
-                 <id discipline="0" />
-                 <id parameterCategory="1" />
-                 <id parameterNumber="3" />
-             </template>
         </element>
         <element NCVar="u10" cfVarName="u10" Name="10 metre U wind component" >
             <template def="0">
@@ -104,11 +68,31 @@
                     <id scaleFactorOfFirstFixedSurface ="0" />
             </template>
         </element>
+        <element NCVar="sst" cfVarName="sst" Name="Sea surface temperature" >
+            <template def="0">
+                    <id discipline="10" />
+                    <id parameterCategory="3" />
+                    <id parameterNumber="0" />
+                    <id typeOfFirstFixedSurface ="1" />
+                    <id scaledValueOfFirstFixedSurface = "0"/>
+                    <id scaleFactorOfFirstFixedSurface ="0" />
+            </template>
+        </element>
         <element NCVar="zgeo" cfVarName="gh" Name="Geopotential height (gpm)" >
             <template def="0">
                     <id discipline="0" />
                     <id parameterCategory="3" />
                     <id parameterNumber="5" />
+                    <id typeOfFirstFixedSurface ="100" />
+                    <id scaledValueOfFirstFixedSurface = "0"/>
+                    <id scaleFactorOfFirstFixedSurface ="0" />
+            </template>
+        </element>
+        <element NCVar="height" cfVarName="dist" Name="Geometric height (m)" >
+            <template def="0">
+                    <id discipline="0" />
+                    <id parameterCategory="3" />
+                    <id parameterNumber="6" />
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
@@ -192,7 +176,7 @@
                     <id typeOfFirstFixedSurface ="1" />
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id timeint = "-1"/> <-- time_interval from start time to forecast time -->
+                    <id timeint = "-1"/>
                 </template>
         </element>
         <element NCVar="rainc" cfVarName="acpcp" Name="Convective precipitation (kg m-2)   (Table 4.2.0.1.table)" >
@@ -203,21 +187,9 @@
                     <id typeOfFirstFixedSurface ="1" />
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id timeint = "-1"/> <-- time_interval from start time to forecast time -->
+                    <id timeint = "-1"/>
                 </template>
         </element>
-	<!--<element NCVar="unknown" cfVarName="unknown" Name="Total precipitation (kg m-2)  " >
-            <template def="8">
-                    <id discipline="0" />
-                    <id parameterCategory="1" />
-                    <id parameterNumber="8" />
-                    <id typeOfFirstFixedSurface ="1" />
-                    <id scaleFactorOfFirstFixedSurface ="0" />
-                    <id scaledValueOfFirstFixedSurface = "0"/>
-                    <id timeint = "-1"/> 
-                </template>
-        </element>-->
-	
         <element NCVar="lh" cfVarName="slhf" Name="Surface latent heat flux w/kg" >
             <template def="0">
                     <id discipline="0" />
@@ -226,24 +198,27 @@
                     <id typeOfFirstFixedSurface ="1" />
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
+                    <id timeint = "-1"/>
                 </template>
         </element>
-        <element NCVar="cape" cfVarName="cape" Name="Convective available potential energy" >
+        <element NCVar="hpbl" cfVarName="hpbl" Name="Planetary boundary layer height  (m)" >
             <template def="0">
                     <id discipline="0" />
-                    <id parameterCategory="7" />
-                    <id parameterNumber="6" />
+                    <id parameterCategory="3" />
+                    <id parameterNumber="18" />
                     <id typeOfFirstFixedSurface ="1" />
-                    <id typeOfSecondFixedSurface = "8"/>
+                    <id scaleFactorOfFirstFixedSurface ="0" />
+                    <id scaledValueOfFirstFixedSurface = "0"/>
                 </template>
         </element>
-             <element NCVar="cin" cfVarName="cin" Name="Convective inhibition" >
+        <element NCVar="cd" cfVarName="cd" Name="Drag coefficient" >
             <template def="0">
                     <id discipline="0" />
-                    <id parameterCategory="7" />
-                    <id parameterNumber="7" />
+                    <id parameterCategory="2" />
+                    <id parameterNumber="29" />
                     <id typeOfFirstFixedSurface ="1" />
-                    <id typeOfSecondFixedSurface = "8"/>
+                    <id scaleFactorOfFirstFixedSurface ="0" />
+                    <id scaledValueOfFirstFixedSurface = "0"/>
                 </template>
         </element>
 
