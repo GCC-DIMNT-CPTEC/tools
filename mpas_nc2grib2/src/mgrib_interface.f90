@@ -49,7 +49,7 @@ module mgrib_interface
    integer::edition
    integer::productionStatus
    integer::gridType              ! 1-regular_ll, 2-regular_gg
-   character(len=20)::packingType !"grid_ccsds, etc"
+   character(len=40)::packingType !"grid_ccsds, etc"
    real,pointer  ::lev(:)         !Vertical levels
    real,pointer  ::lat(:)         !Latitudes
    real,pointer  ::lon(:)         !Longitues
@@ -913,3 +913,27 @@ end  module
 !  101 # Mean sea level (grib2/tables/2/4.5.table , grib2/tables/local/kwbc/1/4.5.table)  
 !  105 # Hybrid level (grib2/tables/2/4.5.table , grib2/tables/local/kwbc/1/4.5.table)  
 !  220;# Planetary boundary layer (grib2/tables/2/4.5.table , grib2/tables/local/kwbc/1/4.5.table)
+!-------------------------------
+! packing type
+!    grid_simple
+!    grid_complex
+!    grid_complex_spatial_differencing
+!    grid_jpeg
+!    grid_ccsds
+!    grid_second_order
+!    grid_png
+!    grid_ieee
+!    spectral_simple
+!    spectral_complex
+!    grid_simple_log_preprocessing
+! References:
+! 1 https://confluence.ecmwf.int/display/ECC/GRIB+Keys
+! 2 https://codes.ecmwf.int/grib/format/grib2/templates/5/3/
+! 3 https://confluence.ecmwf.int/pages/viewpage.action?pageId=293705264
+! ( 1) Spatial differencing is a pre-processing before group splitting at encoding time.
+! It is intended to reduce the size of sufficiently smooth fields,
+! when combined with a splitting scheme as described in Data Representation Template 5.2.
+! At order 1, an initial field of values f is replaced by a new field of values g, where g1 = f1, g2 = f2 - f1, ..., gn = fn - fn-1.
+! At order 2, the field of values g is itself replaced by a new field of values h, where h1 = f1, h2 = f2, h3 = g3 - g2, ..., hn = gn - gn-1.
+! To keep values positive, the overall minimum of the resulting field (either gmin or hmin) is removed.
+! At decoding time, after bit string unpacking, the original scaled values are recovered by adding the overall minimum and summing up recursively.

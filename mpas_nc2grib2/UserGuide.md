@@ -93,4 +93,5 @@ Here we have a explanation of each collums in this table
  - **cfVarName** = Identification of the variable as used in ECMWF and used in the cfVarName.def file. In this file, many important definitions of grib have already been made. But the current version of MPAS_NC2GRIB does not use this definition. The definitions in the subsequent columns are used instead.
  - **Template** = Grib Template Number (see grib table )
 
-Under construction
+References:
+https://sites.ecmwf.int/docs/eccodes/classeccodes.html

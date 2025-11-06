@@ -4,7 +4,7 @@ This software reads MONAN data files in netcdf format and writes them to FM92-GR
 
 ## 1-Compilation Instructions
 
-To compile MPAS_NC2GRIB on linux, it is necessary to previously install of **ECCODES** and **netcdf-fotran** libraries.  To use the **grid_ccsds packing type** to produce more compressed grib be sure that ECCODES was compiled with the option -DENABLE_AEC=ON (Adaptive Entropy Coding library). The  **libaec** must be istalled or/and loaded.
+To compile MPAS_NC2GRIB on linux, it is necessary to previously install of <a href='https://confluence.ecmwf.int/display/ECC/Latest+news'>**ECCODES**</a> and **netcdf-fotran** libraries.  To use the **grid_ccsds packing type** to produce more compressed grib be sure that ECCODES was compiled with the option -DENABLE_AEC=ON (Adaptive Entropy Coding library). The  **libaec** must be istalled or/and loaded.
 
 
 ### 1.1 - Compilation in INPE egeon
