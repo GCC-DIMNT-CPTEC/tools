@@ -20,6 +20,7 @@ program mpas_nc2grib2
 ! 2025-05-10  V2.0-beta: New approach: configuration table nc2grib2.csv was replaced with nc2grib.2.xml
 ! 2025-07-01  Improviment: Check of the coordinated variables sequence were included
 ! 2025-10-22  Improviment: The regular_grid function was included 
+! 2026-07-29  Improviment: Inclusion of test if ECCODES_DIR is defined to read sample file
   use netcdf
   use stringflib
   use datelib
@@ -74,6 +75,7 @@ program mpas_nc2grib2
   character(len=nf90_max_name)     ::vin_name
   character(len=254)               ::longname
   character(len=254)               ::conftable 
+  character(len=1024)              ::sample, eccodes_dir
   INTEGER                          ::dlength
   character (len = 1024)           ::FILE_NAME,txt
   character(LEN=8)                 ::ymd
@@ -112,7 +114,7 @@ program mpas_nc2grib2
      conftable=trim(nc2grib_dir)//"/settings/nc2grib.2.xml"
    end if 
    call getenv("ECCODES_DIR",eccodes_dir)
-   if (len_trim(eccodes_dir)==0)
+   if (len_trim(eccodes_dir)==0) then
     print *,":MPAS_NC2GRIB2: Error! ECCODES_DIR environment variable must be deffined"
     stop
    else
