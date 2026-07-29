@@ -86,10 +86,11 @@ module mgrib_interface
 !-----------------------------
 ! open_grib to write a grib fi
 !------------------------------
- subroutine openw_grib(grib_file,grib_def,tablesVersion)
+ subroutine openw_grib(grib_file,grib_def,tablesVersion,sample)
 	character(len=*),        intent(in)::grib_file
 	type(grib_interface_def),intent(in)::grib_def
 	integer,                 intent(in)::tablesVersion
+	character(len=*),        intent(inout)::sample        !Name of sample file used in "grib_new_from_samples"
 
 	real::ilat,ilon
 	real::dlat,dlon
@@ -114,7 +115,8 @@ module mgrib_interface
 	!call codes_grib_open_file(out1,grib_file,'w')
 	call codes_open_file(out1,outfile,'w')
 	!call codes_grib_new_from_samples(igrib, "./sh_sfc_grib2")   !Example Sherical Hamonics - sfc grib 2
-	call codes_grib_new_from_samples(igrib,"./regular_ll_sfc_grib2")
+	!call codes_grib_new_from_samples(igrib,"./regular_ll_sfc_grib2")
+	call codes_grib_new_from_samples(igrib,sample)
 	call codes_set(igrib, "tablesVersion", tablesVersion_default,status)
 	call codes_set(igrib,'editionNumber',grib_def%edition)
 

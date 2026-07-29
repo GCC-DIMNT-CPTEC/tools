@@ -111,8 +111,14 @@ program mpas_nc2grib2
    else
      conftable=trim(nc2grib_dir)//"/settings/nc2grib.2.xml"
    end if 
+   call getenv("ECCODES_DIR",eccodes_dir)
+   if (len_trim(eccodes_dir)==0)
+    print *,":MPAS_NC2GRIB2: Error! ECCODES_DIR environment variable must be deffined"
+    stop
+   else
+      sample=trim(eccodes_dir)//"share/eccodes/samples/regular_ll_sfc_grib2"
+   end if
 
-   
    call get_parameter(namearg,arg,nargs)
 
    verbose=0                                                                          !
