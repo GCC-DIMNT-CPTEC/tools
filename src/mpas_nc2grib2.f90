@@ -117,7 +117,7 @@ program mpas_nc2grib2
    
    call get_parameter(namearg,arg,nargs)
   
-   verbose=0                                                                          !
+   verbose=3                                                                          !
       do i=1, nargs 
         select case (namearg(i))
             case ("i") 
@@ -168,6 +168,8 @@ program mpas_nc2grib2
        print *,"|     or                                                       |"
        print *,"|                                                              |"
        print *,"|    -C :<Complete path to the configuration table>            |"
+       print *,"|                                                              |"
+       print *,"|    -v : Verbosity  >=0 (Default 3)                           |"
        print *,"|                                                              |"
        print *,"|--------------------------------------------------------------+"
        print *,"| settings=",conftable
