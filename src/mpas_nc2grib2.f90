@@ -114,15 +114,9 @@ program mpas_nc2grib2
      conftable=trim(nc2grib_dir)//"/settings/nc2grib.2.xml"
    end if 
    call getenv("ECCODES_DIR",eccodes_dir)
-   if (len_trim(eccodes_dir)==0) then
-    print *,":MPAS_NC2GRIB2: Error! ECCODES_DIR environment variable must be deffined"
-    stop
-   else
-      sample=trim(eccodes_dir)//"share/eccodes/samples/regular_ll_sfc_grib2"
-   end if
-
+   
    call get_parameter(namearg,arg,nargs)
-
+  
    verbose=0                                                                          !
       do i=1, nargs 
         select case (namearg(i))
@@ -183,7 +177,14 @@ program mpas_nc2grib2
   !=========
   ! Start 
   !=========
-  
+   if (len_trim(eccodes_dir)==0) then
+    print *,":MPAS_NC2GRIB2: Error! ECCODES_DIR environment variable must be deffined"
+    stop
+   else
+      print *,":MPAS_NC2GRIB2:ECCODES_DIR=",trim(eccodes_dir)
+   end if
+   sample="regular_ll_sfc_grib2"
+   
   !-------------------------------------------------------------------------------
   ! Open the file. NF90_NOWRITE tells netCDF we want read-only access to the file.
   ! Allocate variables
@@ -479,7 +480,7 @@ program mpas_nc2grib2
 !------------------------------
     outfile_c=current_filename(OUTFILE,start_date,ifct);
     print *,":MPAS_NC2GRIB2: output filename=",trim(outfile_c)
-    call openw_grib(outfile_c,grib_def,tablesVersion_default)
+    call openw_grib(outfile_c,grib_def,tablesVersion_default,sample)
 
      if (seqdim=="XYZT") then
      !------------------------------
