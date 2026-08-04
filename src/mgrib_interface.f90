@@ -266,6 +266,7 @@ module mgrib_interface
 				values(nb)=par(i,j)
 			end do
 		end do
+	call codes_set(igrib,"bitsPerValue",32)
 	call codes_set(igrib,"values",values)
 	deallocate(values)
 	call codes_write(igrib,out1)
