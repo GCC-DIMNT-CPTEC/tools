@@ -39,6 +39,7 @@ module mgrib_interface
    integer           ::time_interval !Time Interval 
    real              ::sFactor_FFS   !scaleFactorOfFirstFixedSurface
    real              ::sValue_FFS    !scaledValueOfFirstFixedSurface
+   integer           ::bitsPerValue
    character(len=8)  ::cfVarName
    character(len=32) ::ncVarName
    character(len=250)::VarName
@@ -266,7 +267,8 @@ module mgrib_interface
 				values(nb)=par(i,j)
 			end do
 		end do
-	call codes_set(igrib,"bitsPerValue",32)
+	call codes_set(igrib,"bitsPerValue",36) ! 36 Default value
+	!call codes_set(igrib,"decimalScaleFactor",0)  !No Effect 
 	call codes_set(igrib,"values",values)
 	deallocate(values)
 	call codes_write(igrib,out1)
@@ -329,6 +331,7 @@ subroutine set_bitmap(data,missing,bitmap)
 !that grid point
 !• When decoding, you can directly query the bitmap to
 !discover missing data values
+
 !14EUROPEAN CENTRE FOR MEDIUM-RANGE WEATHER FORECASTS October 29, 2014
 !Bitmap: Practicals
 !cd $SCRATCH
