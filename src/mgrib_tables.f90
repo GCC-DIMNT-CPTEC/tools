@@ -17,10 +17,15 @@ module mgrib_tables
  character(len=1024)::nc2grib_dir
  contains
 
-
-subroutine init_parm2(parm_table)
+!-------------------------------------------------------------------------------------------------------------------|
+! init_parm2 | Parameters initializations from XML file                                                             |
+!-------------------------------------------------------------------------------------------------------------------|
+subroutine init_parm2(parm_table,bitsPerValue_in)
    character(len=*),intent(in)::parm_table
-
+   integer, intent(in)::bitsPerValue_in
+   
+   
+   integer:: Default_bitsPerValue
    character(len=1024)::table_name,fname
    integer::i,j
    character(len=256)::line
@@ -37,6 +42,17 @@ subroutine init_parm2(parm_table)
    integer         :: no_data
 
 
+! setting bitPerValue
+!--------------------------------------------------------------------------------------------
+! 1 - Case bitsPerValue_in=0 then uses the bitsPerValue from xml if possible or use 32 bits as default
+! 2 - Case bitsPerValue_in>0 use the bitsPerValue_in as Default for all variables 
+!-----------------------------------------------------------------------------------------------------
+   if (bitsPerValue_in==0) then
+     Default_bitsPerValue=32 
+   else
+      Default_bitsPerValue=bitsPerValue_in
+   end if 
+   
    i=0
    op=.false.
    tablesVersion_default=4
@@ -50,55 +66,60 @@ subroutine init_parm2(parm_table)
 
  call xml_open(info,table_name,mustread)
  ! Check for errors
- if (xml_error(info)) then
+ if (xml_error(info)) then !{
    print *,"Error ",info," ",fname
    stop
  else
    !Start reading the file
    call xml_options(info,ignore_whitespace = .true.)
 
-   do  ! While xml_ok
+   do  ! While xml_ok !{
       call xml_get(info,tag,endtag,attribs,no_attribs,data,no_data)
-      if (xml_error(info)) then
+      if (xml_error(info)) then  !{
          print *,"!handel errors"
          exit
-      endif
+      endif 	!}
     
-      if (tag=="settings") then 
+      if (tag=="settings") then !{
         if (trim(attribs(1,1))=="tablesVersion_default") then
 	   tablesVersion_default=val(attribs(2,1))
 	   print *,"Settings: tablesVersion_Default=",tablesVersion_Default
         end if 
-      end if 
+      end if !}
 
-      if ((tag=="element")) then
-         if (.not.endtag) then
+      if ((tag=="element")) then !{
+         if (.not.endtag) then !{
             i=i+1
-            do j=1,no_attribs
+	 
+            do j=1,no_attribs !{
                !print *," Element [",i,"]",trim(attribs(1,j)),'<=',trim(attribs(2,j))
                 if (trim(attribs(1,j))=="NCVar") var(i)%ncVarName=trim(attribs(2,j))
                 if (trim(attribs(1,j))=="cfVarName") var(i)%cfVarName=trim(attribs(2,j))
                 if (trim(attribs(1,j))=="Name") var(i)%VarName=trim(attribs(2,j))
-            enddo
+            enddo !}
             write(*,'("var(",i3.3,") -> ",3(" [",A,"]"))')i,trim(var(i)%ncVarName),trim(var(i)%cfVarname),trim(var(i)%Varname)
             nvar=i
-         end if
-      end if
+         end if !}
+      end if !}
 
 
-      if ((tag=="template")) then
-        if (.not.endtag) then
-            do j=1,no_attribs
+      if ((tag=="template")) then !{
+        if (.not.endtag) then !{
+            do j=1,no_attribs !{
                 if(trim(attribs(1,j))=="def") var(i)%Template=val(attribs(2,1))
-            end do
+            end do !}
             op=.true.
         else
             op=.false.
-        end if
-      end if
+        end if!}
+      end if !}
+      
 
-
-      if ((var(i)%template==0).and.(op)) then
+      if ((var(i)%template==0).and.(op)) then !{
+      !----------------------------------------
+      !  TEMPLATE 4.0 
+      !----------------------------------------
+        var(i)%bitsPerValue=Default_bitsPerValue
         do j=1,no_attribs
           ! write(*,*) i,"< template 4.0 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
           if (trim(attribs(1,j))=="discipline") var(i)%discipline=val(attribs(2,j))
@@ -107,10 +128,17 @@ subroutine init_parm2(parm_table)
           if (trim(attribs(1,j))=="typeOfFirstFixedSurface") var(i)%tflevel=val(attribs(2,j))
           if (trim(attribs(1,j))=="scaleFactorOfFirstFixedSurface") var(i)%sFactor_FFS=val(attribs(2,j))
           if (trim(attribs(1,j))=="scaledValueOfFirstFixedSurface") var(i)%sValue_FFS=val(attribs(2,j))
+	  if (bitsPerValue_in==0) then 
+	  	if (trim(attribs(1,j))=="bitsPerValue") var(i)%bitsPerValue=val(attribs(2,j))
+	  end if 
           nvar=i
         enddo
-         var(i)%time_interval=0
-      elseif((var(i)%template==8).and.(op)) then
+         var(i)%time_interval=0 
+      elseif((var(i)%template==8).and.(op)) then !}{
+         !----------------------------------------
+         !  TEMPLATE 4.8 
+         !----------------------------------------
+	 var(i)%bitsPerValue=Default_bitsPerValue !Default value
          do j=1,no_attribs
            !  write(*,*) i,"< template 4.8 >",trim(attribs(1,j)),'<=',trim(attribs(2,j))
              if (trim(attribs(1,j))=="discipline") var(i)%discipline=val(attribs(2,j))
@@ -120,14 +148,18 @@ subroutine init_parm2(parm_table)
              if (trim(attribs(1,j))=="scaleFactorOfFirstFixedSurface") var(i)%sFactor_FFS=val(attribs(2,j))
              if (trim(attribs(1,j))=="scaledValueOfFirstFixedSurface") var(i)%sValue_FFS=val(attribs(2,j))
              if (trim(attribs(1,j))=="timeInterval") var(i)%time_interval=val(attribs(2,j))
+	     if (bitsPerValue_in==0) then 
+		     if (trim(attribs(1,j))=="bitsPerValue") var(i)%bitsPerValue=val(attribs(2,j))
+             end if 
              nvar=i
         enddo
 
-      end if
+      end if !}
      !write(*,*) (j,'>',trim(data(j)),'<',j=1,no_data)
 
      if (.not. xml_ok(info)) exit
-    enddo !
+    enddo !}
+    
   endif
   call xml_close(info)
   end subroutine

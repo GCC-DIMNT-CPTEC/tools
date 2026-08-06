@@ -56,6 +56,7 @@
                     <id typeOfFirstFixedSurface ="101" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="14" />
                 </template>
         </element>
         <element NCVar="surface_pressure" cfVarName="sp" Name="Surface pressure (PA)" >

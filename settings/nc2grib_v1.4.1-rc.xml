@@ -27,6 +27,7 @@
                     <id parameterCategory="3" />
                     <id parameterNumber="5" />
                     <id typeOfFirstFixedSurface ="1" />
+		    <id bitsPerValue ="17" />
                 </template>
         </element>
             <element NCVar="landmask" cfVarName="lsm" Name="Land-sea mask" >
@@ -92,6 +93,7 @@
                     <id typeOfFirstFixedSurface ="101" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="14" />
                 </template>
         </element>
         <element NCVar="surface_pressure" cfVarName="sp" Name="Surface pressure (PA)" >

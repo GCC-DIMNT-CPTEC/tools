@@ -80,7 +80,7 @@ program mpas_nc2grib2
   character (len = 1024)           ::FILE_NAME,txt
   character(LEN=8)                 ::ymd
   integer*8                        ::iymd
-
+  character (len=3)                ::xxx
   character (len = 1024)           ::OUTFILE, OUTFILE2,outfile_c
   character(len=1),dimension(100)  ::namearg   !. Nome dos argumentos!
   character(len=256),dimension(100)::arg       !.argumentos!
@@ -92,7 +92,9 @@ program mpas_nc2grib2
   integer::x1,x2,X3,X4
   integer::op
   integer::verbose
+  integer::default_BitsPerValue
 
+  default_BitsPerValue=0
   x1=0
   x2=0       
   X3=0
@@ -135,6 +137,9 @@ program mpas_nc2grib2
               ifct=val(arg(i))
             case ("v")
               verbose=val(arg(i))
+	    case ("b")
+              default_bitsPerValue=val(arg(i))
+	      if (default_bitsPerValue<0) default_bitsPerValue=32
 	    case ("c")
 	      conftable=trim(nc2grib_dir)//"/settings/"//trim(arg(i))
         case ("C")
@@ -162,6 +167,8 @@ program mpas_nc2grib2
        print *,"|        :0=  grid_simple                                      |"
        print *,"|        :1=  grid_ccsds                                       |"
        print *,"|        (Default: 0)                                          |"
+       print *,"|                                                              |"
+       print *,"|    -b :using 32 bits per value as default                    |"
        print *,"|                                                              |"
        print *,"|    -c :<Configuration table name in settings folder >        |"
        print *,"|        (Default= nc2grib.2.xml)                              |"
@@ -279,7 +286,7 @@ program mpas_nc2grib2
      end do
 
      ! Inicialize parameter definitions
-     call init_parm2 (conftable)
+     call init_parm2 (conftable,default_BitsPerValue)
 
 
      allocate (check_var(0:svar))
@@ -377,7 +384,8 @@ program mpas_nc2grib2
       if ((ndims>3).and.(var(i)%tflevel/=100)) then
          print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] Error in the variable dimension deffinition"
       else
-         if (verbose>1) print *,varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] OK"
+         write(xxx,'(i3)')var(i)%bitsPerValue
+         if (verbose>1) print *, varid," nc=[",trim(vin_name),"] cf=[",trim(var(i)%cfVarName),"] bits=[",xxx,"] OK"
       end if
 
       var(i)%missing=missing
