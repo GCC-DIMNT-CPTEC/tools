@@ -19,10 +19,12 @@ elif [[ $a == *"ian"* ]]; then
     export G2CTL=../../../extensions/g2ctl
 else
 	export NC2GRIB_DIR=../..
-	export GRIBMAP=gribmap
+	export GRIBMAP='/home/sergio.ferreira/GRADS/grads_2.0.a9/bin/gribmap'
+	export G2CTL='g2ctl'
 fi
 
 
+#DIR=./dataout_all32
 DIR=./dataout
 start_time=2024070900
 cd $DIR
@@ -34,11 +36,11 @@ for fff in 000 003 006 012 024 ; do
   #
   # generating ctl and idx files
   #
-  cd $DIR
   $G2CTL -verf   $INPUT_GRIB > $OUTPUT_CTL
+  pwd -P
+  echo $GRIBMAP' -i '$OUTPUT_CTL
   $GRIBMAP -i $OUTPUT_CTL
   
-
 done
 
 
