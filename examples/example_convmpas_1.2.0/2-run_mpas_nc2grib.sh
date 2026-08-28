@@ -1,0 +1,34 @@
+#!/bin/bash
+a=`hostname`
+echo $a
+if [[ $a == *"egeon"* ]]; then
+	module load cdo-2.0.4-gcc-9.4.0-bjulvnd
+	module load netcdf-fortran
+	export NFDIR=/opt/ohpc/pub/libs/gnu9/openmpi4/netcdf-fortran/4.5.3
+	export NC2GRIB_DIR=../..
+elif [[ $a == *"ian"* ]]; then
+    module load cray-netcdf-hdf5parallel/4.9.0.15
+    module load libfabric
+    export NFDIR=${NETCDF_DIR}
+    export NC2GRIB_DIR=../..
+else
+	export NC2GRIB_DIR=../..
+fi
+
+dirin=./datain
+dirout=./dataout
+mkdir -p $dirout
+
+fileout=$dirout/MONAN_DIAG_G_POS_GFS_%Y4%M2%D2%H2_%y4%m2%d2%h2.x1024002L55
+
+start_time=2026082800
+
+for fff in 000 ; do # 003 006 012 024 ; do
+    source ./get_date.sh ${start_time}${fff}
+    forecast_time=$yy2$mm2$dd2$hh2
+
+    filein=$dirin/MONAN_DIAG_G_POS_GFS_${start_time}_${forecast_time}.00.00.x5898242L55.nc
+
+    echo $NC2GRIB_DIR'/bin/mpas_nc2grib2.x -i '$filein' -o '$fileout' -s '$start_time' -f '$fff' -v 2'
+    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 2  -C '../../settings/nc2grib.2.xml'
+done
