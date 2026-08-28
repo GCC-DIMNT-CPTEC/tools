@@ -44,7 +44,7 @@ subroutine init_parm2(parm_table,bitsPerValue_in)
 
 ! setting bitPerValue
 !--------------------------------------------------------------------------------------------
-! 1 - Case bitsPerValue_in=0 then uses the bitsPerValue from xml if possible or use 32 bits as default
+! 1 - Case bitsPerValue_in=0 then uses the bitsPerValue from xml (if provided) or use 32 bits as the default
 ! 2 - Case bitsPerValue_in>0 use the bitsPerValue_in as Default for all variables 
 !-----------------------------------------------------------------------------------------------------
    if (bitsPerValue_in==0) then
