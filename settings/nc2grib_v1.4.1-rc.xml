@@ -36,6 +36,7 @@
                     <id parameterCategory="0" />
                     <id parameterNumber="0" />
                     <id typeOfFirstFixedSurface ="1" />
+		    <id bitsPerValue ="1" />
                 </template>
         </element>
         <element NCVar="t2m" cfVarName="t2m" Name="2 metre temperature" >
@@ -46,6 +47,7 @@
                     <id typeOfFirstFixedSurface ="103" />
                     <id scaledValueOfFirstFixedSurface = "2"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="13" />
                 </template>
         </element>
         <element NCVar="q2" cfVarName="sh2" Name="2 metre specific humidity" >
@@ -56,6 +58,7 @@
                     <id typeOfFirstFixedSurface ="103" />
                     <id scaledValueOfFirstFixedSurface = "2"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="15" />
                 </template>
         </element>
         <element NCVar="precipw" cfVarName="pwat" Name="Precipitable water (kg m-2)" >
@@ -73,6 +76,7 @@
                     <id typeOfFirstFixedSurface ="103" />
                     <id scaledValueOfFirstFixedSurface = "10"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="16" />
                 </template>
         </element>
         <element NCVar="v10" cfVarName="v10" Name="10 metre V wind component" >
@@ -83,6 +87,7 @@
                     <id typeOfFirstFixedSurface ="103" />
                     <id scaledValueOfFirstFixedSurface = "10"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="16" />
                 </template>
         </element>
         <element NCVar="mslp" cfVarName="prmsl" Name="Pressure reduced to MSL (Pa)" >
@@ -93,7 +98,7 @@
                     <id typeOfFirstFixedSurface ="101" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
-		    <id bitsPerValue ="14" />
+		    <id bitsPerValue ="15" />
                 </template>
         </element>
         <element NCVar="surface_pressure" cfVarName="sp" Name="Surface pressure (PA)" >
@@ -104,6 +109,7 @@
                     <id typeOfFirstFixedSurface ="1" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="15" />
             </template>
         </element>
         <element NCVar="zgeo" cfVarName="gh" Name="Geopotential height (gpm)" >
@@ -114,6 +120,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="18" />
             </template>
         </element>
         <element NCVar="temperature" cfVarName="t" Name="Temperature (K)" >
@@ -124,6 +131,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="13" />
             </template>
         </element>
         <element NCVar="spechum" cfVarName="q" Name="Specific humidity  (kg kg-1)" >
@@ -134,6 +142,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="15" />
             </template>
         </element>
          <element NCVar="relhum" cfVarName="rh" Name="Relative humidity (%)" >
@@ -144,6 +153,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="11" />
             </template>
         </element>
         <element NCVar="uzonal" cfVarName="u" Name="u-component of wind  (m s-1)" >
@@ -154,6 +164,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="16" />
             </template>
         </element>
         <element NCVar="umeridional" cfVarName="v" Name="v-component of wind  (m s-1)" >
@@ -164,6 +175,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="16" />
             </template>
         </element>
         <element NCVar="omega" cfVarName="w" Name="Vertical velocity (pressure)  (Pa s-1)" >
@@ -174,6 +186,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id scaleFactorOfFirstFixedSurface ="0" />
+		    <id bitsPerValue ="16" />
             </template>
         </element>
         <element NCVar="w" cfVarName="wr" Name="Geometric vertical velocity" >
@@ -184,6 +197,7 @@
                     <id typeOfFirstFixedSurface ="100" />
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
+		    <id bitsPerValue ="16" />
                 </template>
         </element>
         <element NCVar="rainnc" cfVarName="ncpcp" Name="Large scale precipitation (non-convective) (kg m-2) (Table 4.2.0.1.table)" >
@@ -195,6 +209,7 @@
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id timeint = "-1"/> <-- time_interval from start time to forecast time -->
+		    <id bitsPerValue ="16" />
                 </template>
         </element>
         <element NCVar="rainc" cfVarName="acpcp" Name="Convective precipitation (kg m-2)   (Table 4.2.0.1.table)" >
@@ -206,6 +221,7 @@
                     <id scaleFactorOfFirstFixedSurface ="0" />
                     <id scaledValueOfFirstFixedSurface = "0"/>
                     <id timeint = "-1"/> <-- time_interval from start time to forecast time -->
+		    <id bitsPerValue ="16" />
                 </template>
         </element>
 	<!--<element NCVar="unknown" cfVarName="unknown" Name="Total precipitation (kg m-2)  " >

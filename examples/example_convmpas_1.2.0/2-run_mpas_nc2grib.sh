@@ -30,5 +30,7 @@ for fff in 000 ; do # 003 006 012 024 ; do
     filein=$dirin/MONAN_DIAG_G_POS_GFS_${start_time}_${forecast_time}.00.00.x5898242L55.nc
 
     echo $NC2GRIB_DIR'/bin/mpas_nc2grib2.x -i '$filein' -o '$fileout' -s '$start_time' -f '$fff' -v 2'
-    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 2  -C '../../settings/nc2grib.2.xml'
+    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 2  -C '../../settings/nc2grib_v1.4.1-rc.xml'
+    $NC2GRIB_DIR/bin/mpas_nc2grib2.x -b -i $filein -o $fileout'.32' -s $start_time -f $fff -v 2  -C '../../settings/nc2grib_v1.4.1-rc.xml'
+    #$NC2GRIB_DIR/bin/mpas_nc2grib2.x -i $filein -o $fileout -s $start_time -f $fff -v 2  -C '../../settings/nc2grib.2.xml'
 done

@@ -413,7 +413,7 @@ program mpas_nc2grib2
        end if
 
     else
-       if (verbose>2) then
+       if (verbose>1) then
           call check( nf90_get_att(ncid, varid,'long_name', longname))
           print *,varid," nc=[",trim(vin_name),"] cf=[ ",trim(color_text("IGNORED",33,.false.))," ] --> ",trim(longname)
         end if
